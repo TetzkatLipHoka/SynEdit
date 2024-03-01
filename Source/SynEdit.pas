@@ -1474,7 +1474,13 @@ begin
     fFontDummy.CharSet := DEFAULT_CHARSET;
     fFontDummy.Quality := fFontQuality;
     Font.Assign(fFontDummy);
+    {$IF CompilerVersion >= 34} // 10.4 Sydney
     Font.PixelsPerInch := Screen.DefaultPixelsPerInch;
+    {$ELSEIF CompilerVersion >= 30} // 10.0 Seattle
+    Font.PixelsPerInch := Winapi.Windows.USER_DEFAULT_SCREEN_DPI;
+    {$ELSE}
+    Font.PixelsPerInch := 96;
+    {$IFEND}
     Font.Size := fFontDummy.Size;
   finally
     fFontDummy.Free;

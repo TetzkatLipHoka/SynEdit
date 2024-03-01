@@ -110,6 +110,7 @@ const
   SYNS_AttrIndirect             =  'Indirect';
   SYNS_AttrInstructions         =  'Instructions';
   SYNS_AttrInvalidSymbol        =  'InvalidSymbol';
+  SYNS_AttrInterfaceQualifier   =  'InterfaceQualifier';  
   SYNS_AttrInternalFunction     =  'InternalFunction';
   SYNS_AttrKey                  =  'Key';
   SYNS_AttrLabel                =  'Label';
@@ -214,6 +215,7 @@ const
   SYNS_LangCPM                  =  'COAS_Product_Manager_Report';
   SYNS_LangCPP                  =  'CandCPlusPlus';
   SYNS_LangCS                   =  'CSharp';
+  SYNS_LangECMAScript           =  'ECMA Script';
   SYNS_LangJava                 =  'Java';
   SYNS_LangPerl                 =  'Perl';
   SYNS_LangBatch                =  'MS-DOS_Batch';
@@ -238,6 +240,7 @@ const
   SYNS_LangPHP                  =  'PHP';
   SYNS_LangSybaseSQL            =  'SybaseSQL';
   SYNS_LangGeneralMulti         =  'General_Multi-Highlighter';
+  SYNS_LangGLSL                 =  'OpenGL Shader Language';
   SYNS_LangCache                =  'CacheObjectScript';
   SYNS_LangCSS                  =  'CascadingStyleSheet';
   SYNS_LangJScript              =  'JavaScript';
@@ -252,7 +255,7 @@ const
   SYNS_LangModelica             =  'Modelica';
   SYNS_LangModula3              =  'Modula3';
   SYNS_LangSDD                  =  'SemantaDataDictionary';
-  SYNS_LangXML                  =  'XML';
+  SYNS_LangGo                   =  'Go';  
   SYNS_LangGWS                  =  'GW-TEL';
   SYNS_LangSynGenMsgfiles       =  'SynGen_Msg';
   SYNS_LangUnreal               =  'Unreal';
@@ -267,10 +270,13 @@ const
   SYNS_LangEiffel               =  'Eiffel';
   SYNS_LangLDraw                =  'LEGO_LDraw';
   SYNS_LangLLVMIR               =  'LLVM IR';
+  SYNS_LangMASM                 =  'x86Assembly MASM';
   SYNS_LangUnknown              =  '<Unknown>';
   SYNS_LangURI                  =  'URI';
   SYNS_LangVrml97               =  'Vrml97';
   SYNS_LangYAML                 =  'YAML';
+  SYNS_LangXML                  =  'XML';  
+  SYNS_LangZPL                  =  'ZPL';
 
 resourcestring
   SYNS_NoSearchEngineError      = 'No search engine has been assigned';
@@ -337,6 +343,7 @@ resourcestring
   SYNS_FriendlyAttrIndicator            =  'Indicator Area';
   SYNS_FriendlyAttrIndirect             =  'Indirect';
   SYNS_FriendlyAttrInstructions         =  'Instructions';
+  SYNS_FriendlyAttrInterfaceQualifier   =  'Interface Qualifier';  
   SYNS_FriendlyAttrInternalFunction     =  'Internal Function';
   SYNS_FriendlyAttrInvalidSymbol        =  'Invalid Symbol';
   SYNS_FriendlyAttrKey                  =  'Key';
@@ -465,6 +472,7 @@ resourcestring
   SYNS_FilterCPP                =  'C/C++ Files (*.c;*.cpp;*.cc;*.h;*.hpp;*.hh;*.cxx;*.hxx;*.cu)|*.c;*.cpp;*.cc;*.h;*.hpp;*.hh;*.cxx;*.hxx;*.cu';
   SYNS_FilterCS                 =  'C# Files (*.cs)|*.cs';
   SYNS_FilterDWS                =  'DWScript Files (*.dws;*.pas;*.inc)|*.dws;*.pas;*.inc';
+  SYNS_FilterECMAScript         =  'JavaScript files (*.js)|*.js';  
   SYNS_FilterJava               =  'Java Files (*.java)|*.java';
   SYNS_FilterPerl               =  'Perl Files (*.pl;*.pm;*.cgi)|*.pl;*.pm;*.cgi';
   SYNS_FilterAWK                =  'AWK Scripts (*.awk)|*.awk';
@@ -479,6 +487,8 @@ resourcestring
   SYNS_FilterDFM                =  'Borland Form Files (*.dfm;*.xfm)|*.dfm;*.xfm';
   SYNS_FilterX86Assembly        =  'x86 Assembly Files (*.asm)|*.asm';
   SYNS_FilterGembase            =  'GEMBASE Files (*.dml;*.gem)|*.dml;*.gem';
+  SYNS_FilterGo                 =  'Go files (*.go)|*.go';
+  SYNS_FilterGLSL               =  'GLSL files (*.glsl)|*.glsl';  
   SYNS_FilterINI                =  'INI Files (*.ini)|*.ini';
   SYNS_FilterSML                =  'Standard ML Files (*.sml)|*.sml';
   SYNS_FilterVisualBASIC        =  'Visual Basic Files (*.bas)|*.bas';
@@ -514,7 +524,8 @@ resourcestring
   SYNS_FilterLLVMIR             =  'LLVM IR files (*.ll)|*.ll';
   SYNS_FilterURI                =  'All Files (*.*)|*.*';
   SYNS_FilterVrml97             =  'Vrml97/X3D World (*.wrl;*.wrml;*.vrl;*.vrml;*.x3d)|*.wrl;*.wrml;*.vrl;*.vrml;*.x3d';
-  SYNS_FilterYAML               =  'YAML files (*.yaml)|*.yaml';
+  SYNS_FilterYAML               =  'YAML files (*.yaml)|*.yaml';  
+  SYNS_FilterZPL                =  'ZPL Files (*.zpl;*.zplx)|*.zpl;*.zplx';  
 
   // friendly language names
   SYNS_FriendlyLangHP48                 =  'HP48';
@@ -522,6 +533,7 @@ resourcestring
   SYNS_FriendlyLangCPM                  =  'COAS Product Manager Report';
   SYNS_FriendlyLangCPP                  =  'C/C++';
   SYNS_FriendlyLangCS                   =  'C#';
+  SYNS_FriendlyLangECMAScript           = 'ECMA Script';
   SYNS_FriendlyLangJava                 =  'Java';
   SYNS_FriendlyLangPerl                 =  'Perl';
   SYNS_FriendlyLangBatch                =  'MS-DOS Batch';
@@ -546,6 +558,8 @@ resourcestring
   SYNS_FriendlyLangPHP                  =  'PHP';
   SYNS_FriendlyLangSybaseSQL            =  'Sybase SQL';
   SYNS_FriendlyLangGeneralMulti         =  'General Multi-Highlighter';
+  SYNS_FriendlyLangGo                   =  'Go';
+  SYNS_FriendlyLangGLSL                 =  'GLSL';    
   SYNS_FriendlyLangCache                =  'Cache Object Script';
   SYNS_FriendlyLangCSS                  =  'Cascading Style Sheet';
   SYNS_FriendlyLangJScript              =  'JavaScript';
@@ -575,10 +589,12 @@ resourcestring
   SYNS_FriendlyLangEiffel               =  'Eiffel';
   SYNS_FriendlyLangLDraw                =  'LEGO LDraw';
   SYNS_FriendlyLangLLVMIR               =  'LLVM Intermediate Representation';
+  SYNS_FriendlyLangMASM                 =  'x86 Assembly MASM';
   SYNS_FriendlyLangUnknown              =  '<Unknown>';
   SYNS_FriendlyLangURI                  =  'URI';
   SYNS_FriendlyLangVrml97               =  'Vrml97';
   SYNS_FriendlyLangYAML                 =  'YAML';
+  SYNS_FriendlyLangZPL                  =  'ZPL';  
 
 implementation
 

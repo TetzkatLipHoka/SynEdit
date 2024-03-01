@@ -953,7 +953,11 @@ begin
   R.Right := Max(R.Right, R.Left + FSynEdit.CharWidth);
   R := TRect.Intersect(R, FSynEdit.ClientRect);
 
+  {$IF CompilerVersion >= 34}
   R := FSynEdit.ClientToScreen(R);
+  {$ELSE}
+  OffsetRect(R, FSynEdit.ClientOrigin.X, FSynEdit.ClientOrigin.Y);
+  {$IFEND}
 
   RetVal := SafeArrayCreateVector(VT_R8, 0, 4);
   if RetVal = nil then

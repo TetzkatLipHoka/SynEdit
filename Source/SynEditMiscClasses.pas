@@ -747,7 +747,15 @@ begin
   FFont := TFont.Create;
   FFont.Name := DefaultFontName;
   FFont.Style := [];
+
+  {$IF CompilerVersion >= 34} // 10.4 Sydney
   FFont.PixelsPerInch := Screen.DefaultPixelsPerInch;
+  {$ELSEIF CompilerVersion >= 30} // 10.0 Seattle
+  FFont.PixelsPerInch := Winapi.Windows.USER_DEFAULT_SCREEN_DPI;
+  {$ELSE}
+  FFont.PixelsPerInch := FCurrentPPI;
+  {$IFEND}
+
   FFont.Size := 8;
   {$IF CompilerVersion >= 36}
   FFont.IsScreenFont := True;
@@ -1251,7 +1259,13 @@ begin
     FInternalGlyph.AlphaFormat := afDefined;
   end;
 
+  {$IF CompilerVersion >= 34} // 10.4 Sydney
   FPPI := Screen.DefaultPixelsPerInch;
+  {$ELSEIF CompilerVersion >= 30} // 10.0 Seattle
+  FPPI := Winapi.Windows.USER_DEFAULT_SCREEN_DPI;
+  {$ELSE}
+  FPPI := 96;
+  {$IFEND}
 
   FVisible := True;
   FGlyph := TBitmap.Create;

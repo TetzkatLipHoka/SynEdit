@@ -121,6 +121,13 @@ uses
   SynHighlighterUnreal,
   SynHighlighterST,
   SynHighlighterLDraw,
+  
+  SynHighlighterAsmMASM,
+  SynHighlighterECMAScript,
+  SynHighlighterGLSL,
+  SynHighlighterGo,
+  SynHighlighterZPL, 
+     
   SynSpellCheck,
   SynURIOpener;
 
@@ -183,7 +190,9 @@ begin
     // other
     TSynBaanSyn, TSynGalaxySyn, TSynProgressSyn, TSynMsgSyn,
     TSynIdlSyn, TSynUnrealSyn, TSynCPMSyn, TSynTeXSyn, TSynYAMLSyn,
-    TSynHaskellSyn, TSynLDRSyn, TSynURISyn, TSynDOTSyn, TSynRCSyn
+    TSynHaskellSyn, TSynLDRSyn, TSynURISyn, TSynDOTSyn, TSynRCSyn,
+
+    TSynAsmMASMSyn, TSynECMAScriptSyn, TSynGLSLSyn, TSynGoSyn, TSynZPLSyn
   ]);
 
   // SynEdit Actions

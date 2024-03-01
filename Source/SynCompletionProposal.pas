@@ -1200,14 +1200,26 @@ begin
   FTitleFont := TFont.Create;
   FTitleFont.Style := [fsBold];
   FTitleFont.Color := clBtnText;
+  {$IF CompilerVersion >= 34} // 10.4 Sydney
   FTitleFont.PixelsPerInch := Screen.DefaultPixelsPerInch;
+  {$ELSEIF CompilerVersion >= 30} // 10.0 Seattle
+  FTitleFont.PixelsPerInch := Winapi.Windows.USER_DEFAULT_SCREEN_DPI;
+  {$ELSE}
+  FTitleFont.PixelsPerInch := 96;
+  {$IFEND}
   FTitleFont.Size := Application.DefaultFont.Size;
   {$IF CompilerVersion >= 36}
   FTitleFont.IsScreenFont := True;
   {$IFEND CompilerVersion >= 36}
 
   FFont := TFont.Create;
+  {$IF CompilerVersion >= 34} // 10.4 Sydney
   FFont.PixelsPerInch := Screen.DefaultPixelsPerInch;
+  {$ELSEIF CompilerVersion >= 30} // 10.0 Seattle
+  FFont.PixelsPerInch := Winapi.Windows.USER_DEFAULT_SCREEN_DPI;
+  {$ELSE}
+  FFont.PixelsPerInch := 96;
+  {$IFEND}
   FFont.Size := Application.DefaultFont.Size;
   {$IF CompilerVersion >= 36}
   FFont.IsScreenFont := True;
@@ -1215,7 +1227,13 @@ begin
 
   FGripperFont := TFont.Create;
   FGripperFont.Color := clBtnText;
+  {$IF CompilerVersion >= 34} // 10.4 Sydney
   FGripperFont.PixelsPerInch := Screen.DefaultPixelsPerInch;
+  {$ELSEIF CompilerVersion >= 30} // 10.0 Seattle
+  FGripperFont.PixelsPerInch := Winapi.Windows.USER_DEFAULT_SCREEN_DPI;
+  {$ELSE}
+  FGripperFont.PixelsPerInch := 96;
+  {$IFEND}
   FGripperFont.Size := Application.DefaultFont.Size;
   {$IF CompilerVersion >= 36}
   FGripperFont.IsScreenFont := True;
@@ -1592,7 +1610,7 @@ begin
     //Draw gripper.
     if StyleServices.Available then
     begin
-      details := StyleServices(Self).GetElementDetails(tsGripper);
+      details := StyleServices{$IF CompilerVersion >= 34}(Self){$IFEND}.GetElementDetails(tsGripper);
       LStyle.DrawElement(Canvas.Handle, Details, GripperRect, nil, GetCurrentPPI);
     end;
 
