@@ -204,7 +204,8 @@ type
     procedure WMActivate (var Message: TWMActivate); message WM_ACTIVATE;
     procedure WMGetDlgCode(var Message: TWMGetDlgCode); message WM_GETDLGCODE;
     procedure CreateParams(var Params: TCreateParams); override;
-    function GetCurrentPPI: Integer;{$IF CompilerVersion >= 32}override;{$ENDIF}
+
+    function GetCurrentPPI: Integer;{$IF CompilerVersion >= 33}override;{$ENDIF}
   public
     constructor Create(AOwner: Tcomponent); override;
     destructor Destroy; override;
@@ -1611,7 +1612,7 @@ begin
     if StyleServices.Available then
     begin
       details := StyleServices{$IF CompilerVersion >= 34}(Self){$IFEND}.GetElementDetails(tsGripper);
-      LStyle.DrawElement(Canvas.Handle, Details, GripperRect, nil, GetCurrentPPI);
+      LStyle.DrawElement(Canvas.Handle, Details, GripperRect, nil{$IF CompilerVersion >= 33}, GetCurrentPPI{$IFEND});
     end;
 
     if FGripperText <> '' then
@@ -2187,7 +2188,6 @@ begin
   FColumns.Assign(Value);
 end;
 
-
 function TSynBaseCompletionProposalForm.GetCurrentPPI: Integer;
 begin
   if Assigned(FCurrentEditor) then
@@ -2256,6 +2256,24 @@ Var
       List.Free;
     end;
   end;
+
+  {$IF NOT Declared( GetSystemMetricsForDpi )}
+  var
+    GetSystemMetricsForDpi_ : function(nIndex: Integer; dpi: UINT): Integer; stdcall;
+  function GetSystemMetricsForDpi(nIndex: Integer; dpi: UINT): Integer;
+  var
+    Hnd : THandle;
+  begin
+    if ( @GetSystemMetricsForDpi_ = NIL ) then
+      begin
+      Hnd := GetModuleHandle( user32 );
+      if ( Hnd = 0 ) then
+        Hnd := LoadLibrary( user32 );
+      @GetSystemMetricsForDpi_ := GetProcAddress( Hnd, 'GetSystemMetricsForDpi' );
+      end;
+    result := GetSystemMetricsForDpi_( nIndex, dpi );
+  end;
+  {$IFEND}
 
   procedure RecalcFormPlacement;
   var

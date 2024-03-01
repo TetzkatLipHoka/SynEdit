@@ -649,10 +649,12 @@ begin
 end;
 
 procedure TSynSelectedColor.Assign(Source: TPersistent);
+var
+  Src : TSynSelectedColor;
 begin
   if (Source <> nil) and (Source is TSynSelectedColor) then
   begin
-    var Src := TSynSelectedColor(Source);
+    Src := TSynSelectedColor(Source);
     FBG := Src.FBG;
     FFG := Src.FFG;
     FAlpha := Src.Alpha;
@@ -2411,10 +2413,12 @@ end;
 {$REGION 'TTrackChanges'}
 
 procedure TSynTrackChanges.Assign(Source: TPersistent);
+var
+  Src : TSynTrackChanges;
 begin
   if Assigned(Source) and (Source is TSynTrackChanges) then
   begin
-    var Src := TSynTrackChanges(Source);
+    Src := TSynTrackChanges(Source);
     if Assigned(FOwner) then
       FOwner.BeginUpdate;
     try
