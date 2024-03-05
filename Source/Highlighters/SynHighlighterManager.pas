@@ -283,7 +283,7 @@ constructor TSynHighlighterForm.Create(highlighters: TSynHighlighterList);
 
   function PPIScale(Value: Integer): Integer;
   begin
-    Result := MulDiv(Value, Application.MainForm.CurrentPPI, 96);
+    Result := MulDiv(Value, {$IF CompilerVersion >= 33}Application.MainForm.CurrentPPI{$ELSE}Screen.PixelsPerInch{$IFEND}, 96);
   end;
 
 begin

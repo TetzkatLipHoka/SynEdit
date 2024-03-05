@@ -767,7 +767,7 @@ end;
 
 procedure TSynGLSLSyn.DirectiveProc;
 begin
-  if WideTrim(FLine)[1] <> '#' then // '#' is not first char on the line, treat it as an invalid char
+  if Trim(FLine)[1] <> '#' then // '#' is not first char on the line, treat it as an invalid char
   begin
     FTokenID := tkUnknown;
     Inc(Run);
