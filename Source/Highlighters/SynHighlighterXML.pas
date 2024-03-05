@@ -53,7 +53,7 @@ unit SynHighlighterXML;
 
 interface
 
-{$I SynEdit.inc}
+{$I ..\SynEdit.inc}
 
 uses
   Windows, Messages, Controls, Graphics, Registry,

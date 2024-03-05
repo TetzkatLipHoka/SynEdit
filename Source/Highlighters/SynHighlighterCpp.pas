@@ -39,7 +39,7 @@ Thanks to Martin Waldenburg.
 
 unit SynHighlighterCpp;
 
-{$I SynEdit.inc}
+{$I ..\SynEdit.inc}
 
 interface
 

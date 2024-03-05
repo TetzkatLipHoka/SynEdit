@@ -47,7 +47,7 @@ Thanks to Martin Waldenburg, David Muir, Hideo Koiso and Nick Hoddinott.
 
 unit SynHighlighterHC11;
 
-{$I SynEdit.inc}
+{$I ..\SynEdit.inc}
 
 interface
 

@@ -49,7 +49,7 @@ Different SQL dialects can be selected via the Dialect property.
 
 unit SynHighlighterSQL;
 
-{$I SynEdit.inc}
+{$I ..\SynEdit.inc}
 
 interface
 

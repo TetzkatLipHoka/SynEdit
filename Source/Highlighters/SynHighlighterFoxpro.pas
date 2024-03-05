@@ -46,7 +46,7 @@ Thanks to Martin Waldenburg.
 
 unit SynHighlighterFoxpro;
 
-{$I SynEdit.inc}
+{$I ..\SynEdit.inc}
 
 interface
 

@@ -45,7 +45,7 @@ Provides a component to manage many highlighters in a single project.
 
 unit SynHighlighterManager;
 
-{$I SynEdit.inc}
+{$I ..\SynEdit.inc}
 
 interface
 

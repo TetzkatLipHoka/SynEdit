@@ -38,7 +38,7 @@ The SynHighlighterADSP21xx unit provides a ADSP21xx DSP assembler highlighter fo
 
 unit SynHighlighterADSP21xx;
 
-{$I SynEdit.inc}
+{$I ..\SynEdit.inc}
 
 interface
 

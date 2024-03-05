@@ -38,7 +38,7 @@ The SynHighlighterTclTk unit provides SynEdit with a TCL/Tk highlighter.
 
 unit SynHighlighterTclTk;
 
-{$I SynEdit.inc}
+{$I ..\SynEdit.inc}
 
 interface
 

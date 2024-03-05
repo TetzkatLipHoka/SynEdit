@@ -36,7 +36,7 @@ of this file under either the MPL or the GPL.
 
 unit SynHighlighterUnreal;
 
-{$I SynEdit.inc}
+{$I ..\SynEdit.inc}
 
 interface
 

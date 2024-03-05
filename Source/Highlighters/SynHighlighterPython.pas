@@ -46,7 +46,7 @@ The SynHighlighterPython implements a highlighter for Python for the SynEdit pro
 
 unit SynHighlighterPython;
 
-{$I SynEdit.inc}
+{$I ..\SynEdit.inc}
 
 interface
 

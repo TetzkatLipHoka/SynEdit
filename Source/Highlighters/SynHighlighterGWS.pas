@@ -39,7 +39,7 @@ unit SynHighlighterGWS;
 
 { This unit provides a syntax highlighter for GW-TEL Scripts }
 
-{$I SynEdit.inc}
+{$I ..\SynEdit.inc}
 
 interface
 

@@ -39,7 +39,7 @@ Known Issues:
 
 unit SynHighlighterST;
 
-{$I SynEdit.inc}
+{$I ..\SynEdit.inc}
 
 interface
 

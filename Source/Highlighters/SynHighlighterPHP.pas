@@ -47,7 +47,7 @@ Thanks to Martin Waldenburg.
 
 unit SynHighlighterPHP;
 
-{$I SynEdit.inc}
+{$I ..\SynEdit.inc}
 
 interface
 

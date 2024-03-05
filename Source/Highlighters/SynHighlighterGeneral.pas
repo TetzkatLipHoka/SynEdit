@@ -39,7 +39,7 @@ The SynHighlighterGeneral unit provides a customizable highlighter for SynEdit.
 
 unit SynHighlighterGeneral;
 
-{$I SynEdit.inc}
+{$I ..\SynEdit.inc}
 
 interface
 

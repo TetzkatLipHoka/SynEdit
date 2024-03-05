@@ -43,7 +43,7 @@ Two extra properties included (DelphiVersion, PackageSource):
 
 unit SynHighlighterPas;
 
-{$I SynEdit.inc}
+{$I ..\SynEdit.inc}
 
 interface
 

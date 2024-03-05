@@ -45,7 +45,7 @@ The SynHighlighterVB unit provides SynEdit with a Visual Basic (.bas) highlighte
 
 unit SynHighlighterVB;
 
-{$I SynEdit.inc}
+{$I ..\SynEdit.inc}
 
 interface
 

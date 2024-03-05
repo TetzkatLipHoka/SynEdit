@@ -41,7 +41,7 @@ Known Issues:
 
 unit SynHighlighterDWS;
 
-{$I SynEdit.inc}
+{$I ..\SynEdit.inc}
 
 interface
 

@@ -37,7 +37,7 @@ Known Issues:
 
 unit SynHighlighterTeX;
 
-{$I SynEdit.inc}
+{$I ..\SynEdit.inc}
 
 interface
 

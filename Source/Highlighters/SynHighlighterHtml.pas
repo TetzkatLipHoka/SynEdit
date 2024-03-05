@@ -46,7 +46,7 @@ unit SynHighlighterHtml;
 
 interface
 
-{$I SynEdit.inc}
+{$I ..\SynEdit.inc}
 
 uses
   Graphics,

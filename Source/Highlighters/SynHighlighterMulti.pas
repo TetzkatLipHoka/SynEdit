@@ -38,7 +38,7 @@ For example, in HTML as well as HTML tags there can also be JavaScript and/or VB
 
 unit SynHighlighterMulti;
 
-{$I SynEdit.inc}
+{$I ..\SynEdit.inc}
 
 interface
 

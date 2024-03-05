@@ -46,7 +46,7 @@ Thanks to Primoz Gabrijelcic, Martin Waldenburg and Michael Hieke.
 
 unit SynHighlighterIni;
 
-{$I SynEdit.inc}
+{$I ..\SynEdit.inc}
 
 interface
 

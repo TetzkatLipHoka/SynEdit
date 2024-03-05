@@ -46,7 +46,7 @@ The highlighter formats JavaScript source code highlighting keywords, strings, n
 
 unit SynHighlighterJScript;
 
-{$I SynEdit.inc}
+{$I ..\SynEdit.inc}
 
 interface
 

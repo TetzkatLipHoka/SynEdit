@@ -43,7 +43,7 @@ Based on SynHighlighterCpp.pas
 
 unit SynHighlighterCS;
 
-{$I SynEdit.inc}
+{$I ..\SynEdit.inc}
 
 interface
 

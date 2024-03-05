@@ -44,7 +44,7 @@ ashley@ashleybrown.co.uk
 
 unit SynHighlighterHaskell;
 
-{$I SynEdit.inc}
+{$I ..\SynEdit.inc}
 
 interface
 
