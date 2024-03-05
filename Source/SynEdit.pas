@@ -1082,6 +1082,29 @@ type
 //-- CodeFolding
   end;
 
+// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+{$IF Declared( TAnonymousThread )}
+  {$DEFINE HAS_ANONYMOUSTHREADS}
+{$IFEND}
+
+{$IFNDEF HAS_ANONYMOUSTHREADS}
+  TAnonymousThread = class(TThread)
+  private
+    FProc: TProc;
+  protected
+    procedure Execute; override;
+  public
+    constructor Create(const AProc: TProc);
+  end;
+
+function TThread_CreateAnonymousThread(const ThreadProc: TProc): TThread;
+{$ENDIF HAS_ANONYMOUSTHREADS}
+
+{$IF CompilerVersion < 32} // 10.2 Tokyo
+procedure TThread_ForceQueue(const AThread: TThread; const AMethod: TThreadMethod); overload;
+procedure TThread_ForceQueue(const AThread: TThread; const AThreadProc: TThreadProcedure); overload;
+{$IFEND}
+
 implementation
 
 {$R SynEdit.res}
@@ -2133,11 +2156,17 @@ begin
 
   if Assigned(FUIAutomationProvider) and UiaClientsAreListening
   then
-    TThread.ForceQueue(nil, procedure
-    begin
-      UiaRaiseAutomationEvent(IRawElementProviderSimple(FUIAutomationProvider),
-        UIA_Text_TextChangedEventId);
-    end);
+    {$IF CompilerVersion < 32} // 10.2 Tokyo
+    TThread_ForceQueue(
+    {$ELSE}
+    TThread.ForceQueue(
+    {$IFEND}
+      nil,
+      procedure
+      begin
+        UiaRaiseAutomationEvent(IRawElementProviderSimple(FUIAutomationProvider),
+          UIA_Text_TextChangedEventId);
+      end);
 end;
 
 procedure TCustomSynEdit.MouseDown(Button: TMouseButton; Shift: TShiftState;
@@ -2799,7 +2828,11 @@ var
       I: Integer;
     begin
       for I := 1 to S.Length do
-        if not (Word(S[I]) in [9, 32]) then Exit(False);
+        if not (Word(S[I]) in [9, 32]) then
+          begin
+          result := False;
+          Exit;
+          end;
       Result := True;
     end;
 
@@ -2808,7 +2841,7 @@ var
     BMWidth: Integer;
     BitmapRT: ID2D1BitmapRenderTarget;
     BM: ID2D1Bitmap;
-    RectF: TRectF;
+    RectF: {$IF CompilerVersion >= 31}TRectF{$ELSE}TD2D1RectF{$IFEND};
     StrokeStyle: ID2D1StrokeStyle;
     BMSize: TD2D1SizeF;
   begin
@@ -2855,7 +2888,14 @@ var
           if (FIndentGuides.Style = igsDotted) and Odd(fTextHeight) and
             not Odd(Row)
           then
+            {$IF CompilerVersion >= 31}
             RectF.Offset(0, 1);
+            {$ELSE}
+            begin
+            RectF.top := RectF.top + 1;
+            RectF.bottom := RectF.bottom + 1;
+            end;
+            {$IFEND}
           RT.DrawBitmap(BM, @RectF);
         end;
         Inc(TabSteps, TabWidth);
@@ -8818,11 +8858,17 @@ begin
   if (Changes * [scCaretX, scCaretY, scSelection] <> [])
     and Assigned(FUIAutomationProvider) and UiaClientsAreListening
   then
-    TThread.ForceQueue(nil, procedure
-    begin
-      UiaRaiseAutomationEvent(IRawElementProviderSimple(FUIAutomationProvider),
-        UIA_Text_TextSelectionChangedEventId);
-    end);
+    {$IF CompilerVersion < 32} // 10.2 Tokyo
+    TThread_ForceQueue(
+    {$ELSE}
+    TThread.ForceQueue(
+    {$IFEND}
+      nil,
+      procedure
+      begin
+        UiaRaiseAutomationEvent(IRawElementProviderSimple(FUIAutomationProvider),
+          UIA_Text_TextSelectionChangedEventId);
+      end);
 
   if Assigned(fOnStatusChange) then
     fOnStatusChange(Self, fStatusChanges);
@@ -9897,6 +9943,55 @@ begin
   // nothing
 end;
 
+// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+{$IFNDEF HAS_ANONYMOUSTHREADS}
+constructor TAnonymousThread.Create(const AProc: TProc);
+begin
+  inherited Create(True);
+  FreeOnTerminate := True;
+  FProc := AProc;
+end;
+
+procedure TAnonymousThread.Execute;
+begin
+  FProc();
+end;
+
+function TThread_CreateAnonymousThread(const ThreadProc: TProc): TThread;
+begin
+  Result := TAnonymousThread.Create(ThreadProc);
+end;
+{$ENDIF HAS_ANONYMOUSTHREADS}
+
+{$IF CompilerVersion < 32} // 10.2 Tokyo
+procedure TThread_ForceQueue(const AThread: TThread; const AMethod: TThreadMethod);
+begin
+  {$IFDEF HAS_ANONYMOUSTHREADS}
+  TThread.createAnonymousThread(
+  {$ELSE}
+  TThread_createAnonymousThread(
+  {$ENDIF HAS_ANONYMOUSTHREADS}
+    procedure
+    begin
+      TThread.queue( nil, AMethod );
+    end
+  ).start;
+end;
+
+procedure TThread_ForceQueue(const AThread: TThread; const AThreadProc: TThreadProcedure);
+begin
+  {$IFDEF HAS_ANONYMOUSTHREADS}
+  TThread.createAnonymousThread(
+  {$ELSE}
+  TThread_createAnonymousThread(
+  {$ENDIF HAS_ANONYMOUSTHREADS}
+    procedure
+    begin
+      TThread.queue( nil, AThreadProc );
+    end
+  ).start;
+end;
+{$IFEND}
 
 initialization
  TCustomStyleEngine.RegisterStyleHook(TCustomSynEdit, TScrollingStyleHook);

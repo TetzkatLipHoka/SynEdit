@@ -327,7 +327,6 @@ type
     constructor Create(ASynEdit: TCustomSynEdit; ABB, ABE: TBufferCoord);
   end;
 
-
   TSynUIAutomationProvider = class(TInterfacedObject, //IUnknown,
     IRawElementProviderSimple, IValueProvider, ITextProvider, ITextProvider2)
   private
@@ -417,11 +416,17 @@ end;
 
 procedure TSynUIAutomationProvider.NotifyBoundingRectangleChange;
 begin
-  TThread.ForceQueue(nil, procedure
-  begin
-    UiaRaiseAutomationPropertyChangedEvent(IRawElementProviderSimple(Self),
-      UIA_BoundingRectanglePropertyId, OldBoundingRectangle, BoundingRectangle);
-  end);
+  {$IF CompilerVersion < 32} // 10.2 Tokyo
+  TThread_ForceQueue(
+  {$ELSE}
+  TThread.ForceQueue(
+  {$IFEND}
+    nil,
+    procedure
+    begin
+      UiaRaiseAutomationPropertyChangedEvent(IRawElementProviderSimple(Self),
+        UIA_BoundingRectanglePropertyId, OldBoundingRectangle, BoundingRectangle);
+    end);
 end;
 
 function TSynUIAutomationProvider.GetCaretRange(out isActive: BOOL;

@@ -1503,9 +1503,40 @@ end;
 
 procedure TSynInternalImage.Draw(RT: ID2D1RenderTarget;
   Number, X, Y, LineHeight: Integer);
+
+// MS
+{
+function TRectF_FitInto( self : TRectF; const ADesignatedArea: TRectF ): TRectF;
+var
+  Ratio: Single;
+begin
+  if (ADesignatedArea.Width <= 0) or (ADesignatedArea.Height <= 0) then
+  begin
+//    Ratio := 1;
+    result := self;
+    Exit;
+  end;
+
+  if (Self.Width / ADesignatedArea.Width) > (Self.Height / ADesignatedArea.Height) then
+    Ratio := Self.Width / ADesignatedArea.Width
+  else
+    Ratio := Self.Height / ADesignatedArea.Height;
+
+  if Ratio = 0 then
+    begin
+    result := self;
+    Exit;
+    end
+  else
+  begin
+    Result := TRectF.Create(0, 0, Self.Width / Ratio, Self.Height / Ratio);
+    RectCenter(Result, ADesignatedArea);
+  end;
+end;
+}
 var
   ScaledW, ScaledH: Integer;
-  rcSrc, rcDest: TRectF;
+  rcSrc, rcDest: {$IF CompilerVersion >= 31}TRectF{$ELSE}TD2D1RectF{$IFEND};
   BM: ID2D1Bitmap;
 begin
   if (Number >= 0) and (Number < FCount) then
@@ -1515,7 +1546,14 @@ begin
 
     rcSrc := Rect(Number * FWidth, 0, (Number + 1) * FWidth, FHeight);
     rcDest := Rect(0, 0, ScaledW, ScaledH);
+
+    {$IF CompilerVersion >= 31}
     rcDest := rcDest.FitInto(Rect(X, Y, X + ScaledW, Y + LineHeight));
+    {$ELSE}
+    rcDest := rcDest.FitInto(Rect(X, Y, X + ScaledW, Y + LineHeight));
+    {$IFEND};
+
+
 
     BM := D2D1BitmapFromBitmap(FImages, RT);
     RT.DrawBitmap(BM, @rcDest, 1, D2D1_BITMAP_INTERPOLATION_MODE_LINEAR, @rcSrc);

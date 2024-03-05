@@ -109,6 +109,9 @@ type
     FOnInserted: TStringListChangeEvent;
     FOnPut: TStringListPutEvent;
     FOnInfoLoss: TSynInfoLossEvent;
+    {$IF CompilerVersion < 31} // 10.1 Berlin
+    fTrailingLineBreak : Boolean;
+    {$IFEND}
     function GetTextWidth(Index: Integer): Integer;
     function GetMaxWidth: Integer;
     function GetRange(Index: Integer): TSynEditRange;
@@ -128,6 +131,9 @@ type
     procedure Put(Index: Integer; const S: string); override;
     procedure PutObject(Index: Integer; AObject: TObject); override;
     procedure SetCapacity(NewCapacity: Integer); override;
+    {$IF CompilerVersion < 31} // 10.1 Berlin
+    function GetTextStr: string; override;
+    {$IFEND}
     procedure SetTextStr(const Value: string); override;
     procedure SetUpdateState(Updating: Boolean); override;
     // Other protected methods
@@ -174,6 +180,9 @@ type
       write FOnInserted;
     property OnPut: TStringListPutEvent read FOnPut write FOnPut;
     property OnInfoLoss: TSynInfoLossEvent read FOnInfoLoss write FOnInfoLoss;
+    {$IF CompilerVersion < 31} // 10.1 Berlin
+    property  TrailingLineBreak : boolean read fTrailingLineBreak write fTrailingLineBreak;
+    {$IFEND}
   end;
 
   ESynEditStringList = class(Exception);
@@ -201,7 +210,14 @@ begin
   FMaxWidth := -1;
   FTabWidth := 8;
   FUTF8CheckLen := -1;
+
+  {$IF CompilerVersion >= 31} // 10.1 Berlin
   Options := Options - [soWriteBOM, soTrailingLineBreak];
+  {$ELSE}
+  WriteBOM := False;
+  fTrailingLineBreak := False;
+  {$IFEND}
+
   FDetectUTF8 := True;
   FTextWidthFunc := TextWidthFunc;
 end;
@@ -802,6 +818,43 @@ begin
   else
     LineBreak := WideCRLF;
 end;
+
+{$IF CompilerVersion < 31} // 10.1 Berlin
+function TSynEditStringList.GetTextStr: string;
+var
+  I, L, Size, Count: Integer;
+  P: PChar;
+  S, LB: string;
+begin
+  Count := GetCount;
+  Size := 0;
+  LB := LineBreak;
+  for I := 0 to Count - 1 do Inc(Size, Length(Get(I)) + Length(LB));
+  if not TrailingLineBreak then
+    Dec(Size, Length(LB));
+  SetString(Result, nil, Size);
+  P := Pointer(Result);
+  for I := 0 to Count - 1 do
+  begin
+    S := Get(I);
+    L := Length(S);
+    if L <> 0 then
+    begin
+      System.Move(Pointer(S)^, P^, L * SizeOf(Char));
+      Inc(P, L);
+    end;
+    if TrailingLineBreak or (I < Count - 1) then
+    begin
+      L := Length(LB);
+      if L <> 0 then
+      begin
+        System.Move(Pointer(LB)^, P^, L * SizeOf(Char));
+        Inc(P, L);
+      end;
+    end;
+  end;
+end;
+{$IFEND}
 
 procedure TSynEditStringList.SetTextStr(const Value: string);
 begin
