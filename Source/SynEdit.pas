@@ -7224,6 +7224,7 @@ function TCustomSynEdit.SearchReplace(const ASearch, AReplace: string;
   AOptions: TSynSearchOptions): Integer;
 var
   ptStart, ptEnd: TBufferCoord; // start and end of the search range
+  lnStart, lnEnd: Integer;  // the part of the line that is searched
   ptCurrent: TBufferCoord; // current search position
   nSearchLen, nReplaceLen, n, nFound: integer;
   nInLine, nEOLCount, i: integer;
@@ -7234,22 +7235,7 @@ var
   nAction: TSynReplaceAction;
   iResultOffset: Integer;
   sReplace: string;
-
-  function InValidSearchRange(First, Last: Integer): Boolean;
-  begin
-    Result := True;
-    if (fActiveSelectionMode = smNormal) or not (ssoSelectedOnly in AOptions) then
-    begin
-      if ((ptCurrent.Line = ptStart.Line) and (First < ptStart.Char)) or
-        ((ptCurrent.Line = ptEnd.Line) and (Last > ptEnd.Char))
-      then
-        Result := False;
-    end
-    else
-    if (fActiveSelectionMode = smColumn) then
-      // solves bug in search/replace when smColumn mode active and no selection
-      Result := (First >= ptStart.Char) and (Last <= ptEnd.Char) or (ptEnd.Char - ptStart.Char < 1);
-  end;
+  Line: string;
 
 begin
   if not Assigned(fSearchEngine) then
@@ -7312,6 +7298,7 @@ begin
   // initialize the search engine
   fSearchEngine.Options := AOptions;
   fSearchEngine.Pattern := ASearch;
+  fSearchEngine.IsWordBreakFunction := IsWordBreakChar;
   // search while the current search position is inside of the search range
   nReplaceLen := 0;
   DoOnPaintTransient(ttBefore);
@@ -7326,8 +7313,24 @@ begin
   try
     while (ptCurrent.Line >= ptStart.Line) and (ptCurrent.Line <= ptEnd.Line) do
     begin
-      nInLine := fSearchEngine.FindAll(Lines[ptCurrent.Line - 1]);
-      iResultOffset := 0;
+      Line := Lines[ptCurrent.Line - 1];
+      if (ptCurrent.Line = ptStart.Line) or (SelectionMode = smColumn) then
+        lnStart := ptStart.Char
+      else
+        lnStart := 1;
+
+      if (ptCurrent.Line = ptEnd.Line) or (SelectionMode = smColumn) then
+        lnEnd := ptEnd.Char
+      else
+        lnEnd := Length(Line) + 1;
+
+      if lnEnd <= lnStart then
+      begin
+        ptCurrent.Line := ptCurrent.Line + IfThen(bBackward, -1, 1);
+        Continue;
+      end;
+      nInLine := fSearchEngine.FindAll(Copy(Line, lnStart, lnEnd - lnStart));
+      iResultOffset := lnStart - 1;
       if bBackward then
         n := Pred(fSearchEngine.ResultCount)
       else
@@ -7340,8 +7343,6 @@ begin
         nSearchLen := fSearchEngine.Lengths[n];
         if bBackward then Dec(n) else Inc(n);
         Dec(nInLine);
-        // Is the search result entirely in the search range?
-        if not InValidSearchRange(nFound, nFound + nSearchLen) then continue;
         Inc(Result);
         // Select the text, so the user can see it in the OnReplaceText event
         // handler or as the search result.
@@ -7365,7 +7366,10 @@ begin
         begin
           nAction := DoOnReplaceText(ASearch, sReplace, ptCurrent.Line, nFound);
           if nAction = raCancel then
-            exit;
+          begin
+            Dec(Result);
+            Exit;
+          end;
         end
         else
           nAction := raReplace;
@@ -7409,10 +7413,7 @@ begin
           exit;
       end;
       // search next / previous line
-      if bBackward then
-        Dec(ptCurrent.Line)
-      else
-        Inc(ptCurrent.Line);
+      ptCurrent.Line := ptCurrent.Line + IfThen(bBackward, -1, 1);
     end;
   finally
     if bReplaceAll and not bPrompt then DecPaintLock;
