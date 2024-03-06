@@ -443,7 +443,10 @@ begin
   Retval := nil;
 
   if not Assigned(FSynEdit) then
-    Exit(S_FALSE)
+    begin
+    result := S_FALSE;
+    Exit;
+    end
   else
     Result := S_OK;
 
@@ -460,7 +463,10 @@ begin
   RetVal := Unassigned;
 
   if not Assigned(FSynEdit) then
-    Exit(S_FALSE)
+    begin
+    result := S_FALSE;
+    Exit;
+    end
   else
     Result := S_OK;
 
@@ -494,13 +500,17 @@ var
 begin
   if FSynEdit = nil then
   begin
-    RetVal := nil;
-    Exit(E_UNEXPECTED);
+    RetVal := nil;  
+    result := E_UNEXPECTED;
+    Exit;
   end;
 
   RetVal := SafeArrayCreateVector(VT_UNKNOWN, 0, 1);
   if RetVal = nil then
-    Exit(E_UNEXPECTED);
+    begin
+    result := E_UNEXPECTED;
+    Exit;    
+    end;
 
   TextRange := TSynTextRangeProvider.Create(FSynEdit, FSynEdit.BlockBegin,
     FSynEdit.BlockEnd) as IUnknown;
@@ -520,12 +530,16 @@ begin
   if FSynEdit = nil then
   begin
     RetVal := nil;
-    Exit(E_UNEXPECTED);
+    result := E_UNEXPECTED;
+    Exit;
   end;
 
   RetVal := SafeArrayCreateVector(VT_UNKNOWN, 0, 1);
   if RetVal = nil then
-    Exit(E_UNEXPECTED);
+    begin
+    result := E_UNEXPECTED;
+    Exit;    
+    end;
 
   DC1 := DisplayCoord(1, FSynEdit.TopLine);
   DC2 := DisplayCoord(1, Min(DC1.Row + FSynEdit.LinesInWindow, FSynEdit.DisplayRowCount));
@@ -546,7 +560,10 @@ var
   BC: TBufferCoord;
 begin
   if FSynEdit = nil then
-    Exit(E_UNEXPECTED);
+    begin
+    result := E_UNEXPECTED;
+    Exit;    
+    end;
 
   TThread.Synchronize(nil, procedure
   begin
@@ -573,7 +590,10 @@ end;
 function TSynUIAutomationProvider.Get_IsReadOnly(out RetVal: BOOL): HResult;
 begin
   if not Assigned(FSynEdit) then
-    Exit(E_UNEXPECTED)
+    begin
+    result := E_UNEXPECTED;
+    Exit;    
+    end
   else
     Result := S_OK;
 
@@ -597,7 +617,10 @@ end;
 function TSynUIAutomationProvider.Get_Value(out RetVal: WideString): HResult;
 begin
   if not Assigned(FSynEdit) then
-    Exit(S_FALSE)
+    begin
+    result := S_FALSE;
+    Exit;
+    end
   else
     Result := S_OK;
 
@@ -629,7 +652,8 @@ begin
   if FSynEdit = nil then
   begin
     RetVal := nil;
-    Exit(E_UNEXPECTED);
+    result := E_UNEXPECTED;
+    Exit;    
   end;
 
   TThread.Synchronize(nil, procedure
@@ -651,7 +675,10 @@ end;
 function TSynUIAutomationProvider.SetValue(val: PWideChar): HResult;
 begin
   if not Assigned(FSynEdit) or FSynEdit.ReadOnly then
-    Exit(S_FALSE)
+    begin
+    result := S_FALSE;
+    Exit;
+    end
   else
     Result := S_OK;
 
@@ -725,7 +752,10 @@ end;
 function TSynTextRangeProvider.ExpandToEnclosingUnit(AUnit: TextUnit): HResult;
 begin
   if FSynEdit = nil then
-    Exit(E_UNEXPECTED);
+    begin
+    result := E_UNEXPECTED;
+    Exit;    
+    end;
 
   Result := S_OK;
 
@@ -811,9 +841,15 @@ var
 begin
   RetVal := nil;
   if FSynEdit = nil then
-    Exit(E_UNEXPECTED)
+    begin
+    result := E_UNEXPECTED;
+    Exit;    
+    end
   else if FSynEdit.Lines.Count = 0 then
-    Exit(S_OK);
+    begin
+    result := S_OK;
+    Exit;    
+    end;
 
   Result := S_OK;
   if BB = BE then
@@ -903,7 +939,10 @@ var
 begin
   RetVal := nil;
   if FSynEdit = nil then
-    Exit(E_UNEXPECTED);
+    begin
+    result := E_UNEXPECTED;
+    Exit;    
+    end;
 
   Result := S_OK;
 
@@ -966,7 +1005,10 @@ begin
 
   RetVal := SafeArrayCreateVector(VT_R8, 0, 4);
   if RetVal = nil then
-    Exit(E_UNEXPECTED);
+    begin
+    result := E_UNEXPECTED;
+    Exit;    
+    end;
   Index := 0; DVal := R.Left; SafeArrayPutElement(RetVal, Index, DVal);
   Index := 1; DVal := R.Top; SafeArrayPutElement(RetVal, Index, DVal);
   Index := 2; DVal := R.Width; SafeArrayPutElement(RetVal, Index, DVal);
@@ -997,7 +1039,10 @@ var
 begin
   RetVal := '';
   if not Assigned(FSynEdit)  then
-    Exit(S_FALSE);
+    begin
+    result := S_FALSE;
+    Exit;
+    end;
 
   Result := S_OK;
 
@@ -1045,7 +1090,10 @@ var
   NMoves: SYSINT;
 begin
   if FSynEdit = nil then
-    Exit(E_UNEXPECTED);
+    begin
+    result := E_UNEXPECTED;
+    Exit;    
+    end;
 
   Result := S_OK;
   RetVal := 0;
@@ -1197,7 +1245,10 @@ var
   BC: TBufferCoord;
 begin
   if FSynEdit = nil then
-    Exit(E_UNEXPECTED);
+    begin
+    result := E_UNEXPECTED;
+    Exit;    
+    end;
 
   Result := S_OK;
 
@@ -1227,7 +1278,10 @@ var
   BC: TBufferCoord;
 begin
   if FSynEdit = nil then
-    Exit(E_UNEXPECTED);
+    begin
+    result := E_UNEXPECTED;
+    Exit;    
+    end;
 
   Result := S_OK;
 
@@ -1268,7 +1322,10 @@ begin
   if Assigned(FSynEdit) and FSynEdit.HandleAllocated then
     Result := S_OK
   else
-    Exit(S_FALSE);
+    begin
+    result := S_FALSE;
+    Exit;
+    end;
 
   TThread.Synchronize(nil, procedure
   begin

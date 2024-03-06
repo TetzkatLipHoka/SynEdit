@@ -1322,7 +1322,10 @@ var
   HTM: TDwriteHitTestMetrics;
 begin
   if not InRange(Index, 2, S.Length) or (Word(S[Index]) in [9, 32..126]) then
-    Exit(Index);
+    begin
+    result := Index;
+    Exit;
+    end;
 
   PStart := PChar(S);
   PEnd := PStart + S.Length - 1;
@@ -5865,7 +5868,11 @@ procedure TCustomSynEdit.InsertCharAtCursor(const AChar: string);
     GraphemeEnd: Integer;
   begin
     After := Copy(S, Index);
-    if After.Length = 0 then Exit(False);
+    if After.Length = 0 then
+      begin
+      result := False;
+      Exit;
+      end;
 
     GraphemeEnd := ValidTextPos(After, 2, True);
     Delete(After, 1, GraphemeEnd - 1);
@@ -6064,7 +6071,11 @@ var
   Layout: TSynTextLayout;
   P2, PStart, PEnd: PChar;
 begin
-  if P^ = #0 then Exit(0);
+  if P^ = #0 then
+    begin
+    result := 0;
+    Exit;
+    end;
 
   PStart := P;
   PEnd:= P + Len;
@@ -6923,7 +6934,10 @@ begin
         Line := Lines[CY - 1];
         CX := Length(Line) + 1;
         if CX > 1 then
-          Exit(PrevWordPosEx(BufferCoord(CX, CY)));  // recursive call
+          begin
+          result := PrevWordPosEx(BufferCoord(CX, CY)); // recursive call
+          Exit;
+          end;
       end;
     end
     else
@@ -8238,7 +8252,12 @@ procedure TCustomSynEdit.DoBlockUnindent;
     Result := 0;
     Run := Line;
     //Take care of tab character
-    if Run[0] = #9 then Exit(1);
+    if Run[0] = #9 then
+      begin
+      result := 1;
+      Exit;
+      end;  
+
     //Deal with compound tabwidths  Sometimes they have TabChars after a few
     //spaces, yet we need to delete the whole tab width even though the char
     //count might not be FTabWidth because of the TabChar

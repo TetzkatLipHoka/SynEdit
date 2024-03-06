@@ -166,9 +166,15 @@ begin
     BomLen := TEncoding.GetBufferEncoding(Buffer, Encoding);
     WithBOM := BOMLen > 0;
     if Encoding = TEncoding.UTF8 then
-      Exit(True)
+      begin
+      result := True;
+      Exit;
+      end
     else if WithBom then
-      Exit(False);
+      begin
+      result := False;
+      Exit;
+      end;  
 
     { Now check the content for UTF8 sequences }
     Result := IsUtf8(Buffer, 0, BytesToCheck);
@@ -296,7 +302,11 @@ function GetEncoding(Stream: TStream; out WithBOM: Boolean): TEncoding;
   begin
     Result := True;
     for I := 0 to Len - 1 do
-      if A[i] <> B[i] then Exit(False)
+      if A[i] <> B[i] then
+        begin
+        result := False;
+        Exit;
+        end;
   end;
 
 var
@@ -313,7 +323,11 @@ begin
   // if no special characteristics are found it is probably ANSI
   Result := TEncoding.ANSI;
 
-  if IsUTF8(Stream, WithBOM) then Exit(TEncoding.UTF8);
+  if IsUTF8(Stream, WithBOM) then
+    begin
+    result := TEncoding.UTF8;
+    Exit;
+    end;
 
   { try to detect UTF-16 by finding a BOM in UTF-16 format }
 
@@ -327,7 +341,8 @@ begin
     if TBytesEqual(Preamble, Buffer, Length(Preamble)) then
     begin
       WithBOM := True;
-      Exit(TEncoding.Unicode);
+      result := TEncoding.Unicode;
+      Exit;
     end;
   end;
   // Check for BigEndianUnicode
@@ -340,7 +355,8 @@ begin
     if TBytesEqual(Preamble, Buffer, Length(Preamble)) then
     begin
       WithBOM := True;
-      Exit(TEncoding.BigEndianUnicode);
+      result := TEncoding.BigEndianUnicode;
+      Exit;
     end;
   end;
 end;

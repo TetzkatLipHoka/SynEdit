@@ -138,7 +138,10 @@ begin
     FormatEnumerator.Reset;
     while FormatEnumerator.Next (1, FormatEtc, @Returned) = S_OK do
       if FormatEtc.cfFormat = Format then
-        Exit(True);
+        begin
+        result := True;
+        Exit;
+        end;
   end;
 end;
 

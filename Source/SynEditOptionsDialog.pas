@@ -852,10 +852,10 @@ begin
 
   PageControl1.ActivePage := PageControl1.Pages[0];
 
-  labFont.Font.PixelsPerInch := FCurrentPPI;
-  labFont.Canvas.Font.PixelsPerInch := FCurrentPPI;
-  lblGutterFont.Font.PixelsPerInch := FCurrentPPI;
-  lblGutterFont.Canvas.Font.PixelsPerInch := FCurrentPPI;
+  labFont.Font.PixelsPerInch := {$IF CompilerVersion >= 31}FCurrentPPI{$ELSE}Windows.USER_DEFAULT_SCREEN_DPI{$IFEND};
+  labFont.Canvas.Font.PixelsPerInch := {$IF CompilerVersion >= 31}FCurrentPPI{$ELSE}Windows.USER_DEFAULT_SCREEN_DPI{$IFEND};
+  lblGutterFont.Font.PixelsPerInch := {$IF CompilerVersion >= 31}FCurrentPPI{$ELSE}Windows.USER_DEFAULT_SCREEN_DPI{$IFEND};
+  lblGutterFont.Canvas.Font.PixelsPerInch := {$IF CompilerVersion >= 31}FCurrentPPI{$ELSE}Windows.USER_DEFAULT_SCREEN_DPI{$IFEND};
 end;
 
 procedure TfmEditorOptionsDialog.KeyListEditing(Sender: TObject;

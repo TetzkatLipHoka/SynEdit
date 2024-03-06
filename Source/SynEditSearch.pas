@@ -156,7 +156,10 @@ end;
 function TSynEditSearch.IsWordBreakChar(C: WideChar): Boolean;
 begin
   if Assigned(FIsWordBreakFunction) then
-    Exit(FIsWordBreakFunction(C));
+    begin
+    result := FIsWordBreakFunction(C);
+    Exit;
+    end;
 
   case C of
       #0..#32, #160, '.', ',', ';', ':', '"', '''', WideChar(#$00B4), '`',

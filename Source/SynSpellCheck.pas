@@ -641,7 +641,11 @@ end;
 
 function TSynSpellCheck.SpellChecker: ISpellChecker;
 begin
-  if FDictionaryNA then Exit(nil);
+  if FDictionaryNA then
+    begin
+    result := nil;
+    Exit;
+    end;  
 
   if not Assigned(FSpellChecker) then
     CreateSpellChecker;
@@ -652,7 +656,10 @@ class function TSynSpellCheck.SpellCheckFactory: ISpellCheckerFactory;
 begin
   // Windows 8 required
   if not TOSVersion.Check(6, 2) then
-    Exit(nil);
+    begin
+    result := nil;
+    Exit;
+    end;  
 
   if not Assigned(FSpellCheckFactory) then
     FSpellCheckFactory := CreateComObject(CLASS_SpellCheckerFactory) as ISpellCheckerFactory;

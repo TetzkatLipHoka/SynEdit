@@ -641,6 +641,70 @@ uses
   SynEdit,
   SynEditTextBuffer;
 
+{$IF CompilerVersion < 31}
+function TRectF_FitInto( ASelf: TD2D1RectF; const ADesignatedArea: TD2D1RectF ): TD2D1RectF;
+var
+  Ratio  : Single;
+  wASelf,
+  hASelf : Single;
+  wDA,
+  hDA    : Single;
+  DX, DY : Single;
+begin
+  wASelf := ( ASelf.Right - ASelf.Left ){Width};
+  hASelf := ( ASelf.Bottom - ASelf.Top ){Height};
+  wDA    := ( ADesignatedArea.Right - ADesignatedArea.Left ){Width};
+  hDA    := ( ADesignatedArea.Bottom - ADesignatedArea.Top ){Height};
+
+  if (wDA <= 0) or (hDA <= 0) then
+    begin
+//    Ratio := 1;
+    result := ASelf;
+    Exit;
+    end;
+
+  if (wASelf / wDA) > (hASelf / hDA) then
+    Ratio := wASelf / wDA
+  else
+    Ratio := hASelf / hDA;
+
+  if Ratio = 0 then
+    begin
+    result := ASelf;
+    Exit;
+    end
+  else
+    begin
+//    Result := TRectF.Create(0, 0, wASelf / Ratio, hASelf / Ratio);
+    Result.left   := 0;
+    Result.top    := 0;
+    Result.right  := wASelf / Ratio;
+    Result.bottom := hASelf / Ratio;
+
+//    RectCenter(Result, ADesignatedArea);
+//    OffsetRect(Result, -Result.Left, -Result.Top);
+    Result.Top    := Result.Top - Result.Left;
+    Result.Bottom := Result.Bottom - Result.Top;
+    Result.Left   := 0;
+    Result.Right  := 0;
+
+    DX := (( ADesignatedArea.Right - ADesignatedArea.Left ){Width} - ( Result.Right - Result.Left ){Width}) / 2;
+    DY := (( ADesignatedArea.Bottom - ADesignatedArea.Top ){Height} - ( Result.Bottom - Result.Top ){Height}) / 2;
+//    OffsetRect(Result, DX, DY);
+    Result.Left   := Result.Left + DX;
+    Result.Right  := Result.Right + DX;
+    Result.Top    := Result.Top + DY;
+    Result.Bottom := Result.Bottom + DY;
+
+//    OffsetRect(Result, ADesignatedArea.Left, ADesignatedArea.Top);
+    Result.Left   := Result.Left + ADesignatedArea.Left;
+    Result.Right  := Result.Right + ADesignatedArea.Left;
+    Result.Top    := Result.Top + ADesignatedArea.Top;
+    Result.Bottom := Result.Bottom + ADesignatedArea.Top;
+    end;
+end;
+{$IFEND}
+
 {$REGION 'TSynSelectedColor'}
 
 constructor TSynSelectedColor.Create;
@@ -902,7 +966,10 @@ begin
       Continue;
     Inc(L, Band.RealWidth);
     if X < L then
-      Exit(Band);
+      begin
+      result := Band;
+      Exit;
+      end;     
   end;
 end;
 
@@ -1129,7 +1196,10 @@ begin
   Result := nil;
   for I := 0 to Bands.Count - 1 do
     if Bands[I].Kind = Kind then
-      Exit(Bands[I])
+      begin
+      result := Bands[I];
+      Exit;
+      end;       
 end;
 
 function TSynGutter.GetInternalImage: TSynInternalImage;
@@ -1507,37 +1577,6 @@ end;
 
 procedure TSynInternalImage.Draw(RT: ID2D1RenderTarget;
   Number, X, Y, LineHeight: Integer);
-
-// MS
-{
-function TRectF_FitInto( self : TRectF; const ADesignatedArea: TRectF ): TRectF;
-var
-  Ratio: Single;
-begin
-  if (ADesignatedArea.Width <= 0) or (ADesignatedArea.Height <= 0) then
-  begin
-//    Ratio := 1;
-    result := self;
-    Exit;
-  end;
-
-  if (Self.Width / ADesignatedArea.Width) > (Self.Height / ADesignatedArea.Height) then
-    Ratio := Self.Width / ADesignatedArea.Width
-  else
-    Ratio := Self.Height / ADesignatedArea.Height;
-
-  if Ratio = 0 then
-    begin
-    result := self;
-    Exit;
-    end
-  else
-  begin
-    Result := TRectF.Create(0, 0, Self.Width / Ratio, Self.Height / Ratio);
-    RectCenter(Result, ADesignatedArea);
-  end;
-end;
-}
 var
   ScaledW, ScaledH: Integer;
   rcSrc, rcDest: {$IF CompilerVersion >= 31}TRectF{$ELSE}TD2D1RectF{$IFEND};
@@ -1554,10 +1593,8 @@ begin
     {$IF CompilerVersion >= 31}
     rcDest := rcDest.FitInto(Rect(X, Y, X + ScaledW, Y + LineHeight));
     {$ELSE}
-    rcDest := rcDest.FitInto(Rect(X, Y, X + ScaledW, Y + LineHeight));
+    rcDest := TRectF_FitInto( rcDest, Rect(X, Y, X + ScaledW, Y + LineHeight) )
     {$IFEND};
-
-
 
     BM := D2D1BitmapFromBitmap(FImages, RT);
     RT.DrawBitmap(BM, @rcDest, 1, D2D1_BITMAP_INTERPOLATION_MODE_LINEAR, @rcSrc);
@@ -1952,7 +1989,10 @@ begin
       if not Band.Visible then
         Continue;
       if Gutter.Bands[I] = Self then
-        Exit(L);
+        begin
+        result := L;
+        Exit;
+        end;
       Inc(L, Band.RealWidth);
     end;
 end;
@@ -2115,8 +2155,11 @@ var
   S: string;
   TextFormat: TSynTextFormat;
   WordWrapGlyph: ID2D1Bitmap;
-  RectF: TRectF;
+  RectF: {$IF CompilerVersion >= 31}TRectF{$ELSE}TD2D1RectF{$IFEND};
   FontColor: TColor;
+  {$IF CompilerVersion < 31}
+  DX, DY : Single;
+  {$IFEND}
 begin
   SynEdit := TCustomSynEdit(Editor);
   Assert(Assigned(Gutter));
@@ -2157,6 +2200,8 @@ begin
       // paint wrapped line glyphs
       RectF := LineRect;
       RectF := Rect(0, 0, 0, 0);
+
+      {$IF CompilerVersion >= 31}
       RectF.Size := SynEdit.WordWrapGlyph.Size;
       RectF.Offset(LineRect.Left + LineRect.Width - RectF.Width,
         LineRect.Top + (LineRect.Height - RectF.Height) / 2);
@@ -2165,6 +2210,27 @@ begin
         RectF := RectF.FitInto(LineRect);
         RectF.Offset(LineRect.Right - RectF.Right, 0);
       end;
+      {$ELSE}
+      RectF.Right := RectF.Left + SynEdit.WordWrapGlyph.Size.cx;
+      RectF.Bottom := RectF.Top + SynEdit.WordWrapGlyph.Size.cy;
+
+      DX := LineRect.Left + LineRect.Width - ( RectF.Right - RectF.Left ){Width};
+      DY := LineRect.Top + (LineRect.Height - ( RectF.Bottom - RectF.Top ){Height}) / 2;
+//      RectF.Offset( DX, DY );
+      RectF.Left   := RectF.Left + DX;
+      RectF.Top    := RectF.Top + DY;
+      RectF.Right  := RectF.Right + DX;
+      RectF.Bottom := RectF.Bottom + DY;
+
+      if not LineRect.Contains( Rect( Round( RectF.Left ), Round( RectF.Top ), Round( RectF.Right ), Round( RectF.Bottom ) ) ) then
+      begin
+        RectF := TRectF_FitInto( RectF, LineRect );
+//        RectF.Offset(LineRect.Right - RectF.Right, 0);
+        DX := LineRect.Right - RectF.Right;
+        RectF.Left := RectF.Left + DX;
+        RectF.Right := RectF.Right + DX;
+      end;
+      {$IFEND}
       RT.DrawBitmap(WordWrapGlyph, @RectF, 1000);
     end
     else
@@ -2741,7 +2807,8 @@ begin
        ((Id = TGUID.Empty) or (LIndicator.Id = Id)) then
       begin
         Indicator := LIndicator;
-        Exit(True);
+        result := True;
+        Exit;       
       end;
   end;
 end;

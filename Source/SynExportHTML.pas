@@ -203,7 +203,11 @@ var
   StyleName: string;
 begin
   if not FStyleNameCache.TryGetValue(Attri, StyleName) then
-    Exit('');  // Skip any styles that weren't in the data.
+    begin
+    result := ''; // Skip any styles that weren't in the data.
+    Exit;
+    end;
+    
   Result := '.' + StyleName + ' { ';
   Result := Result + AttriToInlineCSS(Attri);
   Result := Result + '}';

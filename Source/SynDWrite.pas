@@ -1620,7 +1620,7 @@ var
   BitmapProperties: TD2D1BitmapProperties;
   Icon: HIcon;
   IconInfo: TIconInfo;
-  R: TRectF;
+  R: {$IF CompilerVersion >= 31}TRectF{$ELSE}TD2D1RectF{$IFEND};
   DC: HDC;
 begin
   Icon := ImageList_GetIcon(IL.Handle, Index, ILD_NORMAL);
@@ -1658,7 +1658,14 @@ begin
   CheckOSError(RT.CreateBitmap(D2D1SizeU(IL.Width, IL.Height), @Buf[0],
                 4 * IL.Width, BitmapProperties, Bitmap));
 
+  {$IF CompilerVersion >= 31}
   R := Rect(X, Y, X + IL.Width, Y + IL.Height);
+  {$ELSE}
+  R.left   := X;
+  R.top    := Y;
+  R.right  := X + IL.Width;
+  R.bottom := Y + IL.Height;
+  {$IFEND}
   RT.DrawBitmap(Bitmap, @R, 1);
 end;
 
@@ -1668,14 +1675,18 @@ var
   DWFont: IDWriteFont;
 begin
   if GetObject(Font.Handle, SizeOf(TLogFont), @LogFont) = 0 then
-    Exit(False);
+    begin
+    result := False;
+    Exit;
+    end;
   try
     CheckOSError(TSynDWrite.GDIInterop.CreateFontFromLOGFONT(LogFont, DWFont));
     Result := (DWFont as IDWriteFont1).IsMonospacedFont;
     if (FontFamilyName(DWFont) <> Font.Name) and (fsBold in Font.Style) then
       Font.Style := Font.Style - [fsBold];
   except
-    Exit(False);
+    result := False;
+    Exit;
   end;
 end;
 
@@ -1686,6 +1697,9 @@ var
   Index: Cardinal;
   Exists: BOOL;
   NameLength: Cardinal;
+{$IF CompilerVersion < 31} // 10.1 Berlin
+  DefaultLocale: String;
+{$IFEND}
 begin
   Result := '';
 
@@ -1693,10 +1707,14 @@ begin
   CheckOSError(FontFamily.GetFamilyNames(Names));
   if Names.GetCount > 0 then
   begin
-    CheckOSError(Names.FindLocaleName(UserLocaleName, Index, Exists));
+    CheckOSError(Names.FindLocaleName({$IF CompilerVersion >= 31}UserLocaleName{$ELSE}UserLocaleName[ 0 ]{$IFEND}, Index, Exists));
     if not Exists then
     begin
-      CheckOSError(Names.FindLocaleName('en-us', Index, Exists));
+      {$IF CompilerVersion < 31} // 10.1 Berlin
+      DefaultLocale := 'en-US';
+      {$IFEND}
+
+      CheckOSError(Names.FindLocaleName({$IF CompilerVersion >= 31}'en-US'{$ELSE}DefaultLocale[ 1 ]{$IFEND}, Index, Exists));
       if not Exists then
         Index := 0;
     end;
@@ -1926,7 +1944,10 @@ begin
   if FSolidBrushes = nil then
     FSolidBrushes := TDictionary<TD2D1ColorF, ID2D1SolidColorBrush>.Create;
   if FSolidBrushes.ContainsKey(Color) then
-    Exit(FSolidBrushes[Color]);
+    begin
+    result := FSolidBrushes[Color];
+    Exit;
+    end;
 
   CheckOSError(RenderTarget.CreateSolidColorBrush(Color, nil, Result));
   FSolidBrushes.Add(Color, Result);
@@ -1964,7 +1985,11 @@ var
   X, Y: Single;
   HTM: TDwriteHitTestMetrics;
 begin
-  if FStart >= FString.Length then Exit(False);
+  if FStart >= FString.Length then
+    begin
+    result := False;
+    Exit;
+    end;
   FTextLayout.HitTestTextPosition(FStart, True, X, Y, HTM);
   FCurrent := Copy(FString, FStart + 1, HTM.Length);
   Inc(FStart, HTM.Length);
