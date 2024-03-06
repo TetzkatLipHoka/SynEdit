@@ -1391,7 +1391,10 @@ begin
   end;
   fStringLen := p - fToIdent;
   if FScanningToEOL then
-    Exit(tkIdentifier);
+    begin
+    result := tkIdentifier;
+    Exit;
+    end;
   SetString(S, fToIdent, fStringLen);
   if not FKeywords.TryGetValue(S, Result) then
     Result := tkIdentifier;
@@ -1935,7 +1938,7 @@ begin
       else
       begin
         // This will work with ansi and unicode letters, including surrogate pairs
-        if (not FLine[Run].IsLowSurrogate) and Char.IsLetter(FLineStr, Run) then  // Index is 0 based here
+        if (not {$IF CompilerVersion < 31}WideChar{$IFEND}( FLine[Run] ).IsLowSurrogate ) and Char.IsLetter(FLineStr, Run) then  // Index is 0 based here
           IdentProc
         else
           UnknownProc;
