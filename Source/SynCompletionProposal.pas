@@ -204,7 +204,7 @@ type
     procedure WMActivate (var Message: TWMActivate); message WM_ACTIVATE;
     procedure WMGetDlgCode(var Message: TWMGetDlgCode); message WM_GETDLGCODE;
     procedure CreateParams(var Params: TCreateParams); override;
-    function GetCurrentPPI: Integer;{$IF CompilerVersion >= 32}override;{$ENDIF}
+    function GetCurrentPPI: Integer;{$IF CompilerVersion >= 33}override;{$ENDIF}
   public
     constructor Create(AOwner: Tcomponent); override;
     destructor Destroy; override;
@@ -1595,8 +1595,8 @@ begin
     //Draw gripper.
     if StyleServices.Available then
     begin
-      details := StyleServices(Self).GetElementDetails(tsGripper);
-      LStyle.DrawElement(Canvas.Handle, Details, GripperRect, nil, GetCurrentPPI);
+      details := {$IF CompilerVersion >= 34}StyleServices(Self){$ELSE}StyleServices{$IFEND}.GetElementDetails(tsGripper);
+      LStyle.DrawElement(Canvas.Handle, Details, GripperRect, nil{$IF CompilerVersion >= 33}, GetCurrentPPI{$IFEND});
     end;
 
     if FGripperText <> '' then
@@ -2249,10 +2249,14 @@ var
 
     // Scrollbar needs to be properly scaled in case primary monitor is High-DPI
     // Check for Windows Anniversary Edition
+    {$IF CompilerVersion >= 33}
     if (TOSVersion.Major >= 10) and (TOSVersion.Build >= 14393) then
       FForm.FScrollbar.Width := GetSystemMetricsForDPI(SM_CXVSCROLL, ActivePPI)
     else
       FForm.FScrollbar.Width := GetSystemMetrics(SM_CXVSCROLL);
+    {$ELSE}
+    FForm.FScrollbar.Width := GetSystemMetrics(SM_CXVSCROLL);
+    {$IFEND}
 
     // Now we can do the measurements
     FForm.RecalcItemHeight;

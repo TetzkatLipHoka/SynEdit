@@ -427,7 +427,7 @@ end;
 procedure TSynUIAutomationProvider.NotifyBoundingRectangleChange;
 begin
   if UiaClientsAreListening then
-    TThread.ForceQueue(nil, procedure
+    TThread.{$IF CompilerVersion >= 32}ForceQueue{$ELSE}Queue{$IFEND}(nil, procedure
     begin
       if FSynEdit = nil then Exit;
 
@@ -614,7 +614,7 @@ end;
 procedure TSynUIAutomationProvider.RaiseTextChangedEvent;
 begin
   if UiaClientsAreListening then
-    TThread.ForceQueue(nil, procedure
+    TThread.{$IF CompilerVersion >= 32}ForceQueue{$ELSE}Queue{$IFEND}(nil, procedure
     begin
       if Assigned(FSynEdit) then
         UiaRaiseAutomationEvent(IRawElementProviderSimple(Self),
@@ -625,7 +625,7 @@ end;
 procedure TSynUIAutomationProvider.RaiseTextSelectionChangedEvent;
 begin
   if UiaClientsAreListening then
-    TThread.ForceQueue(nil, procedure
+    TThread.{$IF CompilerVersion >= 32}ForceQueue{$ELSE}Queue{$IFEND}(nil, procedure
     begin
       if Assigned(FSynEdit) then
         UiaRaiseAutomationEvent(IRawElementProviderSimple(Self),
@@ -996,7 +996,9 @@ begin
   R.Right := Max(R.Right, R.Left + FSynEdit.CharWidth);
   R := TRect.Intersect(R, FSynEdit.ClientRect);
 
-  R := FSynEdit.ClientToScreen(R);
+  // TControl.ClientToScreen(TRect) overload requires Delphi 10.4+
+  R.TopLeft := FSynEdit.ClientToScreen(R.TopLeft);
+  R.BottomRight := FSynEdit.ClientToScreen(R.BottomRight);
 
   RetVal := SafeArrayCreateVector(VT_R8, 0, 4);
   if RetVal = nil then

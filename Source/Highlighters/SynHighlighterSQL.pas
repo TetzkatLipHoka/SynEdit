@@ -1931,7 +1931,9 @@ begin
       else
       begin
         // This will work with ansi and unicode letters, including surrogate pairs
-        if (not FLine[Run].IsLowSurrogate) and Char.IsLetter(FLineStr, Run) then  // Index is 0 based here
+        // Char() cast needed for Delphi 10 Seattle: the char helper does not
+        // resolve on indexed PWideChar expressions there.
+        if (not Char(FLine[Run]).IsLowSurrogate) and Char.IsLetter(FLineStr, Run) then  // Index is 0 based here
           IdentProc
         else
           UnknownProc;

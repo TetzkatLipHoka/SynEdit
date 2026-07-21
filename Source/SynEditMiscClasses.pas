@@ -963,10 +963,12 @@ begin
 end;
 
 procedure TSynSelectedColor.Assign(Source: TPersistent);
+var
+  Src: TSynSelectedColor;
 begin
   if Source is TSynSelectedColor then
   begin
-    var Src := TSynSelectedColor(Source);
+    Src := TSynSelectedColor(Source);
     FBG := Src.FBG;
     FFG := Src.FFG;
     FOpacity := Src.Opacity;
@@ -1810,9 +1812,11 @@ begin
     ScaledW := MulDiv(FWidth, FPPI, 96);
     ScaledH := MulDiv(FHeight, FPPI, 96);
 
-    rcSrc := Rect(Number * FWidth, 0, (Number + 1) * FWidth, FHeight);
-    rcDest := Rect(0, 0, ScaledW, ScaledH);
-    rcDest := rcDest.FitInto(Rect(X, Y, X + ScaledW, Y + LineHeight)).Round;
+    rcSrc := TRectF.Create(Number * FWidth, 0, (Number + 1) * FWidth, FHeight);
+    rcDest := TRectF.Create(0, 0, ScaledW, ScaledH);
+    rcDest := rcDest.FitInto(TRectF.Create(X, Y, X + ScaledW, Y + LineHeight));
+    rcDest := TRectF.Create(Round(rcDest.Left), Round(rcDest.Top),
+      Round(rcDest.Right), Round(rcDest.Bottom));
 
     BM := D2D1BitmapFromBitmap(FImages, RT);
     RT.DrawBitmap(BM, PD2D1RectF(@rcDest), 1,
@@ -2411,14 +2415,14 @@ begin
     then
     begin
       // paint wrapped line glyphs
-      RectF := LineRect;
-      RectF := Rect(0, 0, 0, 0);
-      RectF.Size := SynEdit.WordWrapGlyph.Size;
+      RectF := TRectF.Create(0, 0, SynEdit.WordWrapGlyph.Size.cx,
+        SynEdit.WordWrapGlyph.Size.cy);
       RectF.Offset(LineRect.Left + LineRect.Width - RectF.Width,
         LineRect.Top + (LineRect.Height - RectF.Height) / 2);
       if not LineRect.Contains(RectF.Round) then
       begin
-        RectF := RectF.FitInto(LineRect);
+        RectF := RectF.FitInto(TRectF.Create(LineRect.Left, LineRect.Top,
+          LineRect.Right, LineRect.Bottom));
         RectF.Offset(LineRect.Right - RectF.Right, 0);
       end;
       RT.DrawBitmap(WordWrapGlyph, PD2D1RectF(@RectF), 1000);
@@ -2704,10 +2708,12 @@ end;
 {$REGION 'TTrackChanges'}
 
 procedure TSynTrackChanges.Assign(Source: TPersistent);
+var
+  Src: TSynTrackChanges;
 begin
   if Source is TSynTrackChanges then
   begin
-    var Src := TSynTrackChanges(Source);
+    Src := TSynTrackChanges(Source);
     if Assigned(FOwner) then
       FOwner.BeginUpdate;
     try
@@ -3863,11 +3869,13 @@ procedure TSynSelections.MouseSelection(const Sel: TSynSelection);
 // Mouse selection works differently than selection with the keyboard
 // All other selections overlapping with the active selection get removed
 // as in VS Code and Visual Studio.
+var
+  Index: Integer;
 begin
   // Exit if there are no other selections
   if FSelections.Count <= 1 then Exit;
 
-  for var Index := FSelections.Count - 1 downto 0 do
+  for Index := FSelections.Count - 1 downto 0 do
   begin
     // Sel will become the active selection
     if Index = FActiveSelIndex then
@@ -3882,9 +3890,10 @@ function TSynSelections.PartSelectionsForRow(
 // Provides a list of canditates for partial selection of a Row
 var
   Sel: TSynSelection;
+  Index: Integer;
 begin
   Result := [];
-  for var Index := 0 to FSelections.Count - 1  do
+  for Index := 0 to FSelections.Count - 1  do
   begin
     Sel := FSelections.List[Index].Normalized;
     if Sel.Stop < RowStart then

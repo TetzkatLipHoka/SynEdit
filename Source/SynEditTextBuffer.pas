@@ -12,7 +12,7 @@
   The Original Code is based on parts of mwCustomEdit.pas by Martin Waldenburg,
   part of the mwEdit component suite.
   Portions created by Martin Waldenburg are Copyright (C) 1998 Martin Waldenburg.
-  Unicode translation by Maël Hörz.
+  Unicode translation by Maï¿½l Hï¿½rz.
   All Rights Reserved.
 
   Contributors to the SynEdit and mwEdit projects are listed in the
@@ -203,7 +203,11 @@ begin
   FMaxWidth := -1;
   FTabWidth := 8;
   FUTF8CheckLen := -1;
+  {$IF CompilerVersion >= 31}
   Options := Options - [soWriteBOM, soTrailingLineBreak];
+  {$ELSE}
+  WriteBOM := False;
+  {$IFEND}
   FDetectUTF8 := True;
   FTextWidthFunc := TextWidthFunc;
 end;
@@ -221,14 +225,14 @@ end;
 
 procedure TSynEditStringList.Changed;
 begin
-  if not Updating and Assigned(FOnChange) then
+  if (UpdateCount = 0) and Assigned(FOnChange) then
     FOnChange(Self);
 end;
 
 procedure TSynEditStringList.Changing;
 begin
   FCharIndexesAreValid := False;
-  if not Updating and Assigned(FOnChanging) then
+  if (UpdateCount = 0) and Assigned(FOnChanging) then
     FOnChanging(Self);
 end;
 
@@ -396,6 +400,8 @@ begin
 end;
 
 function TSynEditStringList.GetMaxWidth: Integer;
+var
+  Worker: TProc<Integer>;
 begin
   if FMaxWidth > 0 then
     Result := FMaxWidth
@@ -403,7 +409,9 @@ begin
     Result := 0
   else
   begin
-    TParallel.&For(0, FCount - 1, procedure(I:Integer)
+    // Assigning the closure to a typed local helps older compilers
+    // (10 Seattle) resolve the TParallel.&For overload.
+    Worker := procedure(I:Integer)
     var
       LMaxW: Integer;
       PRec: PSynEditStringRec;
@@ -419,7 +427,8 @@ begin
         if PRec^.FTextWidth <= LMaxW then
           Break;
       until AtomicCmpExchange(FMaxWidth, PRec^.FTextWidth, LMaxW) = LMaxW;
-    end);
+    end;
+    TParallel.&For(0, FCount - 1, Worker);
     Result := Max(FMaxWidth, 0);
   end;
 end;
@@ -790,7 +799,8 @@ begin
         end;
       end;
       // keep the old format of the file
-      if not TrailingLineBreak and (CharInSet(Value[Size], [#10, #13]) or
+      if {$IF CompilerVersion >= 31}not TrailingLineBreak and{$IFEND}
+        (CharInSet(Value[Size], [#10, #13]) or
         (Value[Size] = WideLineSeparator)) then
         InsertItem(FCount, '');
     end;

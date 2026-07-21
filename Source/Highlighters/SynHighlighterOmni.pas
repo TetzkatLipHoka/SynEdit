@@ -320,7 +320,7 @@ constructor TSynOmniSyn.Create(AOwner: TComponent);
   begin
     Result := TStringList.Create;
     { important, cause we want to use CompareXXX not AnsiCompareXXX }
-    Result.UseLocale := False;
+    {$IF CompilerVersion >= 31}Result.UseLocale := False;{$IFEND}
     Result.Sorted := True;
     Result.Duplicates := dupIgnore;
   end;
@@ -1698,7 +1698,7 @@ var
       try
         SortedSL.Clear;
         { important, cause we want CompareXXX, not AnsiCompareXXX when Sort }
-        SortedSL.UseLocale := False;
+        {$IF CompilerVersion >= 31}SortedSL.UseLocale := False;{$IFEND}
         SortedSL.Sorted := True;
         SortedSL.Duplicates := dupIgnore;
         for Str in AStrings do

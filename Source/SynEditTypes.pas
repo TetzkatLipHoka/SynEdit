@@ -564,10 +564,12 @@ begin
 end;
 
 procedure TSynSelection.Normalize;
+var
+  Temp: TBufferCoord;
 begin
   if Start > Stop then
   begin
-    var Temp := Start;
+    Temp := Start;
     Start := Stop;
     Stop := Temp;
     Caret := Stop;

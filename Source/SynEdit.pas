@@ -595,7 +595,7 @@ type
     procedure Updated; override;
     procedure UpdateMouseCursor; virtual;
     procedure CalcTextAreaWidth;
-    procedure ChangeScale(M, D: Integer; isDpiChange: Boolean); override;
+    procedure ChangeScale(M, D: Integer{$IF CompilerVersion >= 31}; isDpiChange: Boolean{$IFEND}); override;
     procedure DoBlockIndent;
     procedure DoBlockUnindent;
     procedure DoContextPopup(MousePos: TPoint; var Handled: Boolean); override;
@@ -1129,6 +1129,13 @@ uses
   SynEditDragDrop,
   SynEditSearch;
 
+{$IF CompilerVersion < 31}
+type
+  // Exposes the protected UpdateCount of TStrings (TStrings.Updating
+  // does not exist before Delphi 10.1 Berlin)
+  TSynStringsAccess = class(TStrings);
+{$IFEND}
+
 { TCustomSynEdit }
 
 function TCustomSynEdit.PixelsToNearestRowColumn(aX, aY: Integer): TDisplayCoord;
@@ -1458,6 +1465,7 @@ end;
 constructor TCustomSynEdit.Create(AOwner: TComponent);
 var
   fFontDummy: TFont;
+  BC: TBufferCoord;
 begin
   inherited Create(AOwner);
   fLines := TSynEditStringList.Create(TextWidth);
@@ -1512,7 +1520,7 @@ begin
     fFontDummy.CharSet := DEFAULT_CHARSET;
     fFontDummy.Quality := fFontQuality;
     Font.Assign(fFontDummy);
-    Font.PixelsPerInch := Screen.DefaultPixelsPerInch;
+    Font.PixelsPerInch := Winapi.Windows.USER_DEFAULT_SCREEN_DPI; //Screen.DefaultPixelsPerInch;
     Font.Size := fFontDummy.Size;
   finally
     fFontDummy.Free;
@@ -1543,7 +1551,7 @@ begin
   fTopLine := 1;
   FLastPosX := 0;
   FCarets := TSynCarets.Create(Canvas);
-  var BC := BufferCoord(1, 1);
+  BC := BufferCoord(1, 1);
   FSelection := TSynSelection.Create(BC, BC, BC);
   FSelections := TSynSelections.Create(Self);
   FSelections.AddCaret(BC, True);
@@ -2781,7 +2789,7 @@ var
         X := TabSteps * CharWidth + fTextOffset;
         if X >= 0 then
         begin
-          RectF := Rect(X - 1, Y, X + BMWidth - 1, Y + fTextHeight);
+          RectF := TRectF.Create(X - 1, Y, X + BMWidth - 1, Y + fTextHeight);
           // avoid having two consequtive dots
           if (FIndentGuides.Style = igsDotted) and Odd(fTextHeight) and
             not Odd(Row)
@@ -5653,7 +5661,11 @@ begin
   FOrigUndoRedo.OnModifiedChanged(Sender);
 end;
 
-procedure TCustomSynEdit.ChangeScale(M, D: Integer; isDpiChange: Boolean);
+procedure TCustomSynEdit.ChangeScale(M, D: Integer{$IF CompilerVersion >= 31}; isDpiChange: Boolean{$IFEND});
+{$IF CompilerVersion < 31}
+const
+  isDpiChange = True;
+{$IFEND}
 begin
   if isDpiChange then
   begin
@@ -5674,7 +5686,7 @@ begin
       EndUpdate;
     end;
   end;
-  inherited ChangeScale(M, D, isDpiChange);
+  inherited ChangeScale(M, D{$IF CompilerVersion >= 31}, isDpiChange{$IFEND});
  end;
 
 procedure TCustomSynEdit.UnHookTextBuffer;
@@ -9941,7 +9953,7 @@ begin
   {  StopScanning recreates AllFoldRanges if needed.
      Normally at this point Lines.Updating = True
      and StopScanning will be called when LinesChanged is executed }
-  if not Lines.Updating and fAllFoldRanges.StopScanning(fLines) then
+  if not {$IF CompilerVersion >= 31}Lines.Updating{$ELSE}(TSynStringsAccess(Lines).UpdateCount > 0){$IFEND} and fAllFoldRanges.StopScanning(fLines) then
   begin
     InvalidateGutterBand(gbkFold);
     if FIndentGuides.Visible and FIndentGuides.StructureHighlight and

@@ -543,13 +543,13 @@ begin
         if (R.Height > 0) and (R.Width > 0) then
         begin
           Details := LStyle.GetElementDetails(tsUpperTrackHorzNormal);
-          LStyle.DrawElement(LBitmap.Canvas.Handle, Details, R, nil, LPPI);
+          LStyle.DrawElement(LBitmap.Canvas.Handle, Details, R, nil{$IF CompilerVersion >= 33}, LPPI{$IFEND});
         end;
 
         if (HorzSliderRect.Height > 0) and (HorzSliderRect.Width > 0) then
         begin
           Details := LStyle.GetElementDetails(HorzSliderState);
-          LStyle.DrawElement(LBitmap.Canvas.Handle, Details, HorzSliderRect, nil, LPPI);
+          LStyle.DrawElement(LBitmap.Canvas.Handle, Details, HorzSliderRect, nil{$IF CompilerVersion >= 33}, LPPI{$IFEND});
         end;
 
         with TCustomSynEdit(Control) do
@@ -558,7 +558,7 @@ begin
           Details := LStyle.GetElementDetails(HorzUpState)
         else
           Details := LStyle.GetElementDetails(tsArrowBtnLeftDisabled);
-        LStyle.DrawElement(LBitmap.Canvas.Handle, Details, HorzUpButtonRect, nil, LPPI);
+        LStyle.DrawElement(LBitmap.Canvas.Handle, Details, HorzUpButtonRect, nil{$IF CompilerVersion >= 33}, LPPI{$IFEND});
 
         ScrollInfo := GetBarScrollInfo(Control.Handle, sbHorizontal);
         BtnEnabled := ([eoDisableScrollArrows, eoScrollPastEol] *
@@ -568,7 +568,7 @@ begin
           Details := LStyle.GetElementDetails(HorzDownState)
         else
           Details := LStyle.GetElementDetails(tsArrowBtnRightDisabled);
-        LStyle.DrawElement(LBitmap.Canvas.Handle, Details, HorzDownButtonRect, nil, LPPI);
+        LStyle.DrawElement(LBitmap.Canvas.Handle, Details, HorzDownButtonRect, nil{$IF CompilerVersion >= 33}, LPPI{$IFEND});
       end;
       MoveWindowOrg(LBitmap.Canvas.Handle, LHorzScrollRect.Left, LHorzScrollRect.Top);
       BitBlt(DC, LHorzScrollRect.Left, LHorzScrollRect.Top, LBitmap.Width, LBitmap.Height,
@@ -620,7 +620,7 @@ begin
         if (R.Height > 0) and (R.Width > 0) then
         begin
           Details := LStyle.GetElementDetails(tsUpperTrackVertNormal);
-          LStyle.DrawElement(LBitmap.Canvas.Handle, Details, R, nil, LPPI);
+          LStyle.DrawElement(LBitmap.Canvas.Handle, Details, R, nil{$IF CompilerVersion >= 33}, LPPI{$IFEND});
         end;
 
         if Editor.ScrollbarAnnotations.Count = 0 then
@@ -628,7 +628,7 @@ begin
           if (LVertSliderRect.Height > 0) and (LVertSliderRect.Width > 0) then
           begin
             Details := LStyle.GetElementDetails(VertSliderState);
-            LStyle.DrawElement(LBitmap.Canvas.Handle, Details, LVertSliderRect, nil, LPPI);
+            LStyle.DrawElement(LBitmap.Canvas.Handle, Details, LVertSliderRect, nil{$IF CompilerVersion >= 33}, LPPI{$IFEND});
           end;
         end;
 
@@ -639,7 +639,7 @@ begin
           Details := LStyle.GetElementDetails(VertUpState)
         else
           Details := LStyle.GetElementDetails(tsArrowBtnUpDisabled);
-        LStyle.DrawElement(LBitmap.Canvas.Handle, Details, VertUpButtonRect, nil, LPPI);
+        LStyle.DrawElement(LBitmap.Canvas.Handle, Details, VertUpButtonRect, nil{$IF CompilerVersion >= 33}, LPPI{$IFEND});
 
         with TCustomSynEdit(Control) do
         begin
@@ -654,7 +654,7 @@ begin
           Details := LStyle.GetElementDetails(VertDownState)
         else
           Details := LStyle.GetElementDetails(tsArrowBtnDownDisabled);
-        LStyle.DrawElement(LBitmap.Canvas.Handle, Details, VertDownButtonRect, nil, LPPI);
+        LStyle.DrawElement(LBitmap.Canvas.Handle, Details, VertDownButtonRect, nil{$IF CompilerVersion >= 33}, LPPI{$IFEND});
 
         MoveWindowOrg(LBitmap.Canvas.Handle, LVertScrollRect.Left, LVertScrollRect.Top + VertUpButtonRect.Height);
 
@@ -735,7 +735,7 @@ begin
             SliderBitmap.SetSize(LVertSliderRect.Width, LVertSliderRect.Height);
             Details := LStyle.GetElementDetails(VertSliderState);
             LStyle.DrawElement(SliderBitmap.Canvas.Handle, Details,
-              Rect(0, 0, LVertSliderRect.Width, LVertSliderRect.Height), nil, LPPI);
+              Rect(0, 0, LVertSliderRect.Width, LVertSliderRect.Height), nil{$IF CompilerVersion >= 33}, LPPI{$IFEND});
             LBitmap.Canvas.Draw(0, LVertSliderRect.Top - LVertScrollRect.Top,
               SliderBitmap, 80 * 255 div 100);  // 80% opacity
           finally

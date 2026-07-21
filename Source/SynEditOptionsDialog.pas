@@ -546,10 +546,10 @@ begin
   with eKeyShort1 do
   begin
     Parent := gbKeystrokes;
-    Left := Muldiv(120, FCurrentPPI, Screen.DefaultPixelsPerInch);
-    Top := Muldiv(55, FCurrentPPI, Screen.DefaultPixelsPerInch);
-    Width := Muldiv(185, FCurrentPPI, Screen.DefaultPixelsPerInch);
-    Height := Muldiv(21, FCurrentPPI, Screen.DefaultPixelsPerInch);
+    Left := Muldiv(120, FCurrentPPI, Winapi.Windows.USER_DEFAULT_SCREEN_DPI);
+    Top := Muldiv(55, FCurrentPPI, Winapi.Windows.USER_DEFAULT_SCREEN_DPI);
+    Width := Muldiv(185, FCurrentPPI, Winapi.Windows.USER_DEFAULT_SCREEN_DPI);
+    Height := Muldiv(21, FCurrentPPI, Winapi.Windows.USER_DEFAULT_SCREEN_DPI);
     HotKey := 0;
     InvalidKeys := [];
     Modifiers := [];
@@ -560,10 +560,10 @@ begin
   with eKeyShort2 do
   begin
     Parent := gbKeystrokes;
-    Left := Muldiv(120, FCurrentPPI, Screen.DefaultPixelsPerInch);
-    Top := Muldiv(87, FCurrentPPI, Screen.DefaultPixelsPerInch);
-    Width := Muldiv(185, FCurrentPPI, Screen.DefaultPixelsPerInch);
-    Height := Muldiv(21, FCurrentPPI, Screen.DefaultPixelsPerInch);
+    Left := Muldiv(120, FCurrentPPI, Winapi.Windows.USER_DEFAULT_SCREEN_DPI);
+    Top := Muldiv(87, FCurrentPPI, Winapi.Windows.USER_DEFAULT_SCREEN_DPI);
+    Width := Muldiv(185, FCurrentPPI, Winapi.Windows.USER_DEFAULT_SCREEN_DPI);
+    Height := Muldiv(21, FCurrentPPI, Winapi.Windows.USER_DEFAULT_SCREEN_DPI);
     HotKey := 0;
     InvalidKeys := [];
     Modifiers := [];

@@ -90,6 +90,7 @@ uses
   Controls,
   StdCtrls,
   CheckLst,
+  SynEditTypes,
   SynEditHighlighter,
   SynEditStrConst,
   SysUtils;

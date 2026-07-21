@@ -1664,7 +1664,8 @@ begin
   then
     Exit;
 
-  R := RectF(X, Y, X + IL.Width * ScaleF, Y + IL.Height * ScaleF).Round;
+  R := RectF(X, Y, X + IL.Width * ScaleF, Y + IL.Height * ScaleF);
+  R := RectF(Round(R.Left), Round(R.Top), Round(R.Right), Round(R.Bottom));
   RT.DrawBitmap(Bitmap, PD2D1RectF(@R), 1);
 end;
 
@@ -1686,6 +1687,10 @@ begin
 end;
 
 function FontFamilyName(Font: IDWriteFont): string;
+{$IF CompilerVersion < 31}
+const
+  SEnUS: UnicodeString = 'en-us';
+{$IFEND}
 var
   FontFamily: IDWriteFontFamily;
   Names: IDWriteLocalizedStrings;
@@ -1699,10 +1704,20 @@ begin
   CheckOSError(FontFamily.GetFamilyNames(Names));
   if Names.GetCount > 0 then
   begin
+    // Delphi 10 Seattle declares FindLocaleName(var localeName: WCHAR;...)
+    // instead of taking a PWideChar as later versions do.
+    {$IF CompilerVersion >= 31}
     CheckOSError(Names.FindLocaleName(UserLocaleName, Index, Exists));
+    {$ELSE}
+    CheckOSError(Names.FindLocaleName(UserLocaleName[0], Index, Exists));
+    {$IFEND}
     if not Exists then
     begin
+      {$IF CompilerVersion >= 31}
       CheckOSError(Names.FindLocaleName('en-us', Index, Exists));
+      {$ELSE}
+      CheckOSError(Names.FindLocaleName(PWideChar(SEnUS)^, Index, Exists));
+      {$IFEND}
       if not Exists then
         Index := 0;
     end;
