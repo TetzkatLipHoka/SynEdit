@@ -1,4 +1,4 @@
-﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
     <PropertyGroup>
         <Base>True</Base>
         <AppType>Package</AppType>
@@ -152,6 +152,12 @@
         <DCCReference Include="..\..\Source\SynExportTeX.pas"/>
         <DCCReference Include="..\..\Source\Highlighters\SynHighlighterADSP21xx.pas"/>
         <DCCReference Include="..\..\Source\Highlighters\SynHighlighterAsm.pas"/>
+        <DCCReference Include="..\..\Source\Highlighters\SynHighlighterAsmMASM.pas"/>
+        <DCCReference Include="..\..\Source\Highlighters\SynHighlighterECMAScript.pas"/>
+        <DCCReference Include="..\..\Source\Highlighters\SynHighlighterGLSL.pas"/>
+        <DCCReference Include="..\..\Source\Highlighters\SynHighlighterGo.pas"/>
+        <DCCReference Include="..\..\Source\Highlighters\SynHighlighterHashEntries.pas"/>
+        <DCCReference Include="..\..\Source\Highlighters\SynHighlighterZPL.pas"/>
         <DCCReference Include="..\..\Source\Highlighters\SynHighlighterAWK.pas"/>
         <DCCReference Include="..\..\Source\Highlighters\SynHighlighterBaan.pas"/>
         <DCCReference Include="..\..\Source\Highlighters\SynHighlighterBat.pas"/>

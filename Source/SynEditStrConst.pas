@@ -99,6 +99,7 @@ const
   SYNS_AttrIdentifier           =  'Identifier';
   SYNS_AttrIllegalChar          =  'IllegalChar';
   SYNS_AttrInclude              =  'Include';
+  SYNS_AttrInterfaceQualifier   =  'InterfaceQualifier';
   SYNS_AttrIndicator            =  'IndicatorArea';
   SYNS_AttrIndirect             =  'Indirect';
   SYNS_AttrInstructions         =  'Instructions';
@@ -204,6 +205,11 @@ const
   // constant language names
   SYNS_LangHP48                 =  'HP48';
   SYNS_LangCAClipper            =  'CA-Clipper';
+  SYNS_LangECMAScript           =  'ECMA Script';
+  SYNS_LangGLSL                 =  'OpenGL Shader Language';
+  SYNS_LangGo                   =  'Go';
+  SYNS_LangMASM                 =  'x86Assembly MASM';
+  SYNS_LangZPL                  =  'ZPL';
   SYNS_LangCPM                  =  'COAS_Product_Manager_Report';
   SYNS_LangCPP                  =  'CandCPlusPlus';
   SYNS_LangCS                   =  'CSharp';
@@ -331,6 +337,7 @@ resourcestring
   SYNS_FriendlyAttrIdentifier           =  'Identifier';
   SYNS_FriendlyAttrIllegalChar          =  'Illegal Char';
   SYNS_FriendlyAttrInclude              =  'Include';
+  SYNS_FriendlyAttrInterfaceQualifier   =  'Interface Qualifier';
   SYNS_FriendlyAttrIndicator            =  'Indicator Area';
   SYNS_FriendlyAttrIndirect             =  'Indirect';
   SYNS_FriendlyAttrInstructions         =  'Instructions';
@@ -457,6 +464,10 @@ resourcestring
   SYNS_FilterPascal             =  'Pascal Files (*.pas;*.pp;*.dpr;*.dpk;*.inc)|*.pas;*.pp;*.dpr;*.dpk;*.inc';
   SYNS_FilterHP48               =  'HP48 Files (*.s;*.sou;*.a;*.hp)|*.s;*.sou;*.a;*.hp';
   SYNS_FilterCAClipper          =  'CA-Clipper Files (*.prg;*.ch;*.inc)|*.prg;*.ch;*.inc';
+  SYNS_FilterECMAScript         =  'JavaScript files (*.js)|*.js';
+  SYNS_FilterGLSL               =  'GLSL files (*.glsl)|*.glsl';
+  SYNS_FilterGo                 =  'Go files (*.go)|*.go';
+  SYNS_FilterZPL                =  'ZPL Files (*.zpl;*.zplx)|*.zpl;*.zplx';
   SYNS_FilterCORBAIDL           =  'CORBA IDL Files (*.idl)|*.idl';
   SYNS_FilterCPM                =  'CPM Reports (*.rdf;*.rif;*.rmf;*.rxf)|*.rdf;*.rif;*.rmf;*.rxf';
   SYNS_FilterCPP                =  'C/C++ Files (*.c;*.cpp;*.cc;*.h;*.hpp;*.hh;*.cxx;*.hxx;*.cu)|*.c;*.cpp;*.cc;*.h;*.hpp;*.hh;*.cxx;*.hxx;*.cu';
@@ -552,6 +563,11 @@ resourcestring
   SYNS_FriendlyLangBaan                 =  'Baan 4GL';
   SYNS_FriendlyLangFoxpro               =  'Foxpro';
   SYNS_FriendlyLangFortran              =  'Fortran';
+  SYNS_FriendlyLangECMAScript           =  'ECMA Script';
+  SYNS_FriendlyLangGLSL                 =  'GLSL';
+  SYNS_FriendlyLangGo                   =  'Go';
+  SYNS_FriendlyLangMASM                 =  'x86 Assembly MASM';
+  SYNS_FriendlyLangZPL                  =  'ZPL';
   SYNS_FriendlyLang68HC11               =  '68HC11 Assembler';
   SYNS_FriendlyLangProgress             =  'Progress';
   SYNS_FriendlyLangInno                 =  'Inno Setup Script';
