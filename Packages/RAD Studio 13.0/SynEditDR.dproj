@@ -153,6 +153,7 @@
         <DCCReference Include="..\..\Source\Highlighters\SynHighlighterADSP21xx.pas"/>
         <DCCReference Include="..\..\Source\Highlighters\SynHighlighterAsm.pas"/>
         <DCCReference Include="..\..\Source\Highlighters\SynHighlighterAsmMASM.pas"/>
+        <DCCReference Include="..\..\Source\Highlighters\SynHighlighterAsmX86_64.pas"/>
         <DCCReference Include="..\..\Source\Highlighters\SynHighlighterECMAScript.pas"/>
         <DCCReference Include="..\..\Source\Highlighters\SynHighlighterGLSL.pas"/>
         <DCCReference Include="..\..\Source\Highlighters\SynHighlighterGo.pas"/>

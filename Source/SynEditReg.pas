@@ -116,6 +116,7 @@ uses
   SynHighlighterLDraw,
   SynHighlighterOmni,
   SynHighlighterAsmMASM,
+  SynHighlighterAsmX86_64,
   SynHighlighterECMAScript,
   SynHighlighterGLSL,
   SynHighlighterGo,
@@ -184,7 +185,7 @@ begin
     TSynBaanSyn, TSynGalaxySyn, TSynProgressSyn, TSynMsgSyn,
     TSynIdlSyn, TSynUnrealSyn, TSynCPMSyn, TSynTeXSyn, TSynYAMLSyn,
     TSynHaskellSyn, TSynLDRSyn, TSynURISyn, TSynDOTSyn, TSynRCSyn,
-    TSynAsmMASMSyn, TSynECMAScriptSyn, TSynGLSLSyn, TSynGoSyn, TSynZPLSyn
+    TSynAsmMASMSyn, TSynAsmX86_64, TSynECMAScriptSyn, TSynGLSLSyn, TSynGoSyn, TSynZPLSyn
   ]);
 
   // SynEdit Actions

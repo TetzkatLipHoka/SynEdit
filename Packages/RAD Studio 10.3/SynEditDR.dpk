@@ -83,6 +83,7 @@ contains
   SynHighlighterADSP21xx in '..\..\Source\Highlighters\SynHighlighterADSP21xx.pas',
   SynHighlighterAsm in '..\..\Source\Highlighters\SynHighlighterAsm.pas',
   SynHighlighterAsmMASM in '..\..\Source\Highlighters\SynHighlighterAsmMASM.pas',
+  SynHighlighterAsmX86_64 in '..\..\Source\Highlighters\SynHighlighterAsmX86_64.pas',
   SynHighlighterECMAScript in '..\..\Source\Highlighters\SynHighlighterECMAScript.pas',
   SynHighlighterGLSL in '..\..\Source\Highlighters\SynHighlighterGLSL.pas',
   SynHighlighterGo in '..\..\Source\Highlighters\SynHighlighterGo.pas',
