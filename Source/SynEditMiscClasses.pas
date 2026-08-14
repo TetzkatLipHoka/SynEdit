@@ -1292,7 +1292,11 @@ end;
 
 procedure TSynGutter.SetDigitCount(Value: Integer);
 begin
-  Value := MinMax(Value, 2, 12);
+  // Upper bound raised from 12: with OnGutterGetText the line number band can
+  // hold arbitrary text (hex offsets, symbol names), and nothing here depends
+  // on the count - it only feeds Max(), a Format('%*d') and one multiplication.
+  // 12 dates back to when the band could only ever show a line number.
+  Value := MinMax(Value, 2, 24);
   if FDigitCount <> Value then
   begin
     FDigitCount := Value;
