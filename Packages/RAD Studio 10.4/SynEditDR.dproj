@@ -173,6 +173,7 @@
         <DCCReference Include="..\..\Source\SynEditTextBuffer.pas"/>
         <DCCReference Include="..\..\Source\SynEditTypes.pas"/>
         <DCCReference Include="..\..\Source\SynEditUndo.pas"/>
+        <DCCReference Include="..\..\Source\SynEditWildcardSearch.pas"/>
         <DCCReference Include="..\..\Source\SynEditWordWrap.pas"/>
         <DCCReference Include="..\..\Source\SynExportHTML.pas"/>
         <DCCReference Include="..\..\Source\SynExportRTF.pas"/>
