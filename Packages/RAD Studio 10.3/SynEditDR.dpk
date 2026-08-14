@@ -75,6 +75,7 @@ contains
   SynEditTextBuffer in '..\..\Source\SynEditTextBuffer.pas',
   SynEditTypes in '..\..\Source\SynEditTypes.pas',
   SynEditUndo in '..\..\Source\SynEditUndo.pas',
+  SynEditWildcardSearch in '..\..\Source\SynEditWildcardSearch.pas',
   SynEditWordWrap in '..\..\Source\SynEditWordWrap.pas',
   SynExportHTML in '..\..\Source\SynExportHTML.pas',
   SynExportRTF in '..\..\Source\SynExportRTF.pas',
