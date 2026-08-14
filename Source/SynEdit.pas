@@ -2530,6 +2530,22 @@ var
     IsFullySelected: Boolean;
     SpecialFG, SpecialBG: TColor;
   begin
+    // Seed them the way the classic SynEdit does (colFG := Font.Color;
+    // colBG := colEditorBG). OnSpecialLineColors handlers are allowed to set
+    // only one of the two - without this the other one keeps whatever was on
+    // the stack, which usually renders as clBlack.
+    // Under an active VCL style Font.Color/Color are not what the control is
+    // actually drawn with, so take the styled colors there - otherwise a
+    // handler that only sets the background gets black text on a dark theme.
+    SpecialFG := Font.Color;
+    SpecialBG := Color;
+    if StyleServices.Enabled and not StyleServices.IsSystemStyle then
+    begin
+      if seFont in StyleElements then
+        SpecialFG := StyleServices.GetSystemColor(clWindowText);
+      if seClient in StyleElements then
+        SpecialBG := StyleServices.GetStyleColor(scEdit);
+    end;
     IsLineSpecial := DoOnSpecialLineColors(Line, SpecialFG, SpecialBG);
     IsFullySelected := IsRowFullySelected(Row, RowStart);
 
