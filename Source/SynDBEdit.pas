@@ -214,7 +214,8 @@ end;
 
 procedure TCustomDBSynEdit.CMGetDataLink(var Msg: TMessage);
 begin
-  Msg.Result := Integer(FDataLink);
+  // LRESULT, not Integer: on Win64 the pointer would be truncated otherwise
+  Msg.Result := LRESULT(FDataLink);
 end;
 
 procedure TCustomDBSynEdit.DataChange(Sender: TObject);
